@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宁波泓汛线缆有限公司 - 内部管理系统</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { -webkit-font-smoothing:antialiased; }
+body { font-family:"Microsoft YaHei","PingFang SC",sans-serif; background:#f0f3f8; color:#2b2f36; font-size:14px; }
+button { font-family:inherit; cursor:pointer; }
+input,select,textarea { font-family:inherit; font-size:13px; padding:8px 10px; border:1px solid #ccd4de; border-radius:6px; outline:none; background:#fff; transition:border-color .15s, box-shadow .15s; }
+input:focus,select:focus,textarea:focus { border-color:#2f6fbe; box-shadow:0 0 0 3px rgba(47,111,190,.12); }
+input:disabled,select:disabled { background:#f2f4f7; color:#8b93a1; }
+table { border-collapse:collapse; width:100%; background:#fff; }
+th,td { border:1px solid #dde3ea; padding:8px 9px; text-align:center; vertical-align:middle; }
+th { background:#f4f7fb; color:#3d4a5c; font-weight:600; white-space:nowrap; font-size:13px; border-top:2px solid #2f6fbe; }
+tbody tr { transition:background .12s; }
+tbody tr:hover td { background:#eef5ff; }
+tr:nth-child(even) td { background:#fafbfd; }
+tbody tr:hover td { background:#eef5ff !important; }
+::selection { background:#bcd7f5; }
+/* ============ 登录页（星空 · 居中玻璃卡片） ============ */
+#loginView { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:50; background:radial-gradient(1100px 700px at 50% 36%, #142f52 0%, #0d1f38 48%, #081426 100%); overflow:hidden; }
+.stars, .stars2 { position:absolute; top:0; left:0; width:2px; height:2px; border-radius:50%; background:transparent; pointer-events:none; }
+.stars { box-shadow: 4vw 10vh #fff7, 13vw 6vh #fff8, 21vw 18vh #fff5, 29vw 9vh #fff7, 37vw 25vh #fff4, 45vw 5vh #fff8, 54vw 17vh #fff5, 62vw 8vh #fff7, 71vw 23vh #fff4, 79vw 12vh #fff6, 87vw 29vh #fff5, 95vw 7vh #fff7, 8vw 37vh #fff5, 18vw 44vh #fff4, 33vw 54vh #fff6, 47vw 61vh #fff4, 60vw 47vh #fff5, 74vw 57vh #fff6, 86vw 43vh #fff5, 94vw 51vh #fff6, 6vw 71vh #fff4, 16vw 84vh #fff5, 28vw 77vh #fff6, 42vw 87vh #fff4, 57vw 79vh #fff5, 70vw 89vh #fff4, 82vw 75vh #fff5, 92vw 85vh #fff6, 50vw 34vh #fff3, 25vw 32vh #fff4, 68vw 36vh #fff4, 11vw 58vh #fff3; animation:twinkle 4.5s ease-in-out infinite alternate; }
+.stars2 { width:1px; height:1px; box-shadow: 9vw 22vh #fff5, 17vw 30vh #fff4, 26vw 12vh #fff5, 35vw 40vh #fff3, 43vw 15vh #fff5, 52vw 28vh #fff4, 59vw 42vh #fff3, 67vw 19vh #fff5, 76vw 33vh #fff4, 84vw 20vh #fff5, 91vw 38vh #fff4, 97vw 15vh #fff5, 5vw 50vh #fff4, 22vw 62vh #fff3, 38vw 70vh #fff4, 53vw 68vh #fff3, 66vw 63vh #fff4, 79vw 67vh #fff3, 89vw 60vh #fff4, 96vw 70vh #fff3, 12vw 92vh #fff4, 32vw 95vh #fff3, 48vw 93vh #fff4, 64vw 96vh #fff3, 78vw 92vh #fff4, 90vw 94vh #fff3; animation:twinkle 4.5s 2.2s ease-in-out infinite alternate; }
+@keyframes twinkle { from { opacity:.35; } to { opacity:.9; } }
+.login-glow { position:absolute; left:50%; top:44%; transform:translate(-50%,-50%); width:560px; height:560px; border-radius:50%; background:radial-gradient(circle, rgba(56,130,246,.16) 0%, rgba(56,130,246,.05) 42%, transparent 68%); pointer-events:none; }
+.login-card { position:relative; z-index:2; width:360px; max-width:92vw; padding:40px 38px 30px; background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.09); border-radius:18px; box-shadow:0 24px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.07); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); text-align:center; animation:fadeUp .55s ease both; }
+.lc-logo { width:76px; height:76px; margin:0 auto 12px; border-radius:20px; background:linear-gradient(135deg,#ffffff,#d6e6fb); display:flex; align-items:center; justify-content:center; font-size:36px; font-weight:800; color:#1d4ed8; box-shadow:0 12px 32px rgba(0,0,0,.45), 0 0 0 7px rgba(255,255,255,.05); overflow:hidden; }
+.lc-logo img { width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block; }
+.lc-tag { display:inline-block; font-size:10.5px; color:#8fa8c7; border:1px solid rgba(255,255,255,.14); border-radius:8px; padding:2px 11px; margin-bottom:14px; letter-spacing:2px; }
+.lc-title { font-size:19px; color:#f2f6fc; font-weight:700; letter-spacing:1px; margin-bottom:6px; }
+.lc-sub { font-size:12px; color:#7d90ab; letter-spacing:2px; margin-bottom:26px; }
+.lc-field { position:relative; margin-bottom:14px; text-align:left; }
+.lc-field input { width:100%; padding:11px 42px 11px 14px; font-size:13.5px; color:#e8eef7; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:10px; transition:border-color .15s, box-shadow .15s, background .15s; }
+.lc-field input::placeholder { color:#5f7189; }
+.lc-field input:focus { border-color:#3b82f6; background:rgba(255,255,255,.085); box-shadow:0 0 0 3px rgba(59,130,246,.18); }
+.eye { position:absolute; right:6px; top:50%; transform:translateY(-50%); width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:8px; }
+.eye:hover { background:rgba(255,255,255,.06); }
+.lc-btn { width:100%; margin-top:10px; padding:12px 12px 12px 20px; border:none; border-radius:10px; background:linear-gradient(90deg,#45c4ff,#2f6bf6); color:#fff; font-size:15px; font-weight:600; letter-spacing:8px; box-shadow:0 10px 26px rgba(47,107,246,.4); transition:filter .15s, transform .15s, box-shadow .15s; }
+.lc-btn:hover { filter:brightness(1.12); transform:translateY(-1px); box-shadow:0 14px 32px rgba(47,107,246,.5); }
+.lc-tip { margin-top:22px; font-size:11.5px; color:#5f7189; line-height:1.9; }
+.lc-tip b { color:#93a7c4; font-weight:600; }
+.lc-foot { margin-top:12px; font-size:10.5px; color:#43536a; letter-spacing:.5px; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+@media (max-width:480px){ .login-card { padding:32px 22px 24px; } }
+/* ============ 主布局 ============ */
+#app { display:flex; min-height:100vh; }
+#sidebar { width:212px; background:linear-gradient(180deg,#0e2f57,#123c6b 70%,#16406f); color:#c3d6ec; flex-shrink:0; display:flex; flex-direction:column; position:sticky; top:0; height:100vh; }
+#sidebar .logo { padding:20px 18px; border-bottom:1px solid rgba(255,255,255,.1); display:flex; align-items:center; gap:11px; }
+#sidebar .logo .mark { width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,#f5a623,#f7c85c); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#123c6b; flex-shrink:0; overflow:hidden; }
+#sidebar .logo .mark img { width:100%; height:100%; object-fit:cover; border-radius:inherit; display:block; }
+#sidebar .logo b { display:block; color:#fff; font-size:13.5px; line-height:1.45; letter-spacing:.5px; }
+#sidebar .logo span { font-size:11px; color:#8fadc9; }
+#navBox { flex:1; padding:12px 10px; overflow-y:auto; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:11px 13px; margin-bottom:3px; cursor:pointer; font-size:13.5px; border-radius:8px; color:#b7cce3; transition:background .15s, color .15s; }
+.nav-item svg { width:17px; height:17px; opacity:.85; flex-shrink:0; }
+.nav-item:hover { background:rgba(255,255,255,.08); color:#fff; }
+.nav-item.active { background:linear-gradient(90deg, rgba(245,166,35,.18), rgba(245,166,35,.05)); color:#fff; box-shadow:inset 3px 0 0 #f5a623; }
+#mainWrap { flex:1; min-width:0; display:flex; flex-direction:column; }
+#topbar { background:#fff; height:58px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; box-shadow:0 1px 4px rgba(16,42,77,.08); position:sticky; top:0; z-index:10; }
+#topbar .tb-left { display:flex; align-items:baseline; gap:12px; }
+#topbar .tb-title { font-size:17px; font-weight:700; color:#123c6b; }
+#topbar .tb-date { font-size:12px; color:#98a2b0; }
+#topbar .tb-user { display:flex; align-items:center; gap:10px; font-size:13px; color:#666; }
+.avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#2f6fbe,#123c6b); color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+#topbar .tb-user b { color:#123c6b; }
+#topbar .role-chip { background:#eef4fb; color:#2f6fbe; font-size:11.5px; padding:2px 9px; border-radius:10px; }
+#page { padding:22px 26px 60px; }
+/* ============ 卡片 / 统计 ============ */
+.card { background:#fff; border-radius:12px; padding:18px 20px; box-shadow:0 1px 3px rgba(16,42,77,.06), 0 1px 2px rgba(16,42,77,.04); margin-bottom:18px; }
+.card h3 { font-size:15px; color:#123c6b; margin-bottom:14px; padding-left:10px; border-left:4px solid #2f6fbe; line-height:1.4; }
+.stat-row { display:flex; gap:14px; flex-wrap:wrap; }
+.stat-box { flex:1; min-width:150px; background:#fff; border-radius:12px; padding:16px 18px; box-shadow:0 1px 3px rgba(16,42,77,.06); border-top:3px solid #2f6fbe; transition:transform .15s, box-shadow .15s; }
+.stat-box:hover { transform:translateY(-2px); box-shadow:0 6px 16px rgba(16,42,77,.1); }
+.stat-box .num { font-size:28px; font-weight:700; color:#123c6b; font-variant-numeric:tabular-nums; }
+.stat-box .lbl { font-size:12px; color:#8b93a1; margin-top:4px; }
+.stat-box.warn { border-top-color:#e67e22; } .stat-box.warn .num { color:#e67e22; }
+.stat-box.green { border-top-color:#27ae60; } .stat-box.green .num { color:#27ae60; }
+.stat-box.red { border-top-color:#c0392b; } .stat-box.red .num { color:#c0392b; }
+/* ============ 工具条 / 按钮 ============ */
+.toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:14px; }
+.toolbar .sp { flex:1; }
+.btn { border:none; border-radius:7px; padding:8px 15px; font-size:13px; color:#fff; background:linear-gradient(135deg,#2f6fbe,#2461a5); transition:all .15s; box-shadow:0 1px 2px rgba(16,42,77,.18); }
+.btn:hover { filter:brightness(1.07); transform:translateY(-1px); box-shadow:0 3px 8px rgba(16,42,77,.2); }
+.btn:active { transform:none; }
+.btn-green { background:linear-gradient(135deg,#2fb367,#219a54); }
+.btn-orange { background:linear-gradient(135deg,#ef9237,#e07b1a); }
+.btn-red { background:linear-gradient(135deg,#d9534f,#c0392b); }
+.btn-gray { background:linear-gradient(135deg,#8d99a8,#77828f); }
+.btn-white { background:#fff; color:#2f6fbe; border:1px solid #b9d0ea; box-shadow:none; }
+.btn-white:hover { background:#f2f7fd; }
+.btn-sm { padding:4px 10px; font-size:12px; border-radius:5px; }
+.link-btn { border:none; background:none; color:#2f6fbe; font-size:12.5px; padding:2px 5px; text-decoration:none; border-radius:4px; transition:background .12s; }
+.link-btn:hover { background:#e8f1fc; text-decoration:underline; }
+.link-btn.red { color:#c0392b; } .link-btn.red:hover { background:#fdeeec; }
+.link-btn.gray { color:#7f8c9b; } .link-btn.gray:hover { background:#f0f2f5; }
+.note { background:linear-gradient(90deg,#fffbe8,#fffdf4); border:1px solid #f1e3a0; border-left:4px solid #e8c747; color:#8a7321; padding:10px 14px; border-radius:8px; font-size:12.5px; line-height:1.9; margin-bottom:14px; }
+.tabs { display:flex; gap:6px; margin-bottom:14px; border-bottom:2px solid #e2e8f0; }
+.tab { padding:9px 22px; cursor:pointer; font-size:14px; color:#68737f; border-radius:8px 8px 0 0; transition:all .15s; position:relative; }
+.tab:hover { color:#2f6fbe; background:#f0f6fd; }
+.tab.active { background:linear-gradient(135deg,#2f6fbe,#2461a5); color:#fff; font-weight:600; }
+/* ============ 徽章 ============ */
+.badge { display:inline-block; padding:3px 11px; border-radius:20px; font-size:12px; white-space:nowrap; font-weight:600; }
+.b-green { background:#e3f5e8; color:#1e7e34; }
+.b-orange { background:#fff3e0; color:#b26a00; }
+.b-gray { background:#eef0f3; color:#6b7280; }
+.b-red { background:#fdeaea; color:#c0392b; }
+.b-blue { background:#e7f0fb; color:#1f5fa8; }
+/* ============ 弹窗 ============ */
+#modalMask { position:fixed; inset:0; background:rgba(13,32,58,.5); backdrop-filter:blur(2px); display:none; align-items:flex-start; justify-content:center; z-index:100; overflow:auto; padding:44px 16px; }
+#modalBox { background:#fff; border-radius:14px; width:640px; max-width:96vw; padding:22px 28px 24px; box-shadow:0 20px 60px rgba(10,30,60,.35); animation:pop .22s ease both; }
+@keyframes pop { from { opacity:0; transform:translateY(14px) scale(.98); } to { opacity:1; transform:none; } }
+#modalBox h3 { color:#123c6b; font-size:16px; margin-bottom:16px; border-bottom:2px solid #eef2f7; padding-bottom:10px; display:flex; justify-content:space-between; align-items:center; }
+#modalBox h3 .x { border:none; background:#f0f3f8; color:#8b93a1; width:26px; height:26px; border-radius:50%; font-size:14px; line-height:1; }
+#modalBox h3 .x:hover { background:#e2e8f0; color:#444; }
+.fgrid { display:grid; grid-template-columns:1fr 1fr; gap:13px 16px; }
+.fgrid .full { grid-column:1 / -1; }
+.fitem label { display:block; font-size:12px; color:#68737f; margin-bottom:5px; font-weight:600; }
+.fitem label .req { color:#c0392b; }
+.fitem input,.fitem select,.fitem textarea { width:100%; }
+.mfoot { text-align:right; margin-top:20px; padding-top:14px; border-top:1px solid #eef1f5; }
+.mfoot button { margin-left:8px; }
+.form-tip { font-size:12px; color:#98a2b0; margin-top:8px; }
+/* ============ 附件 ============ */
+.att-row { display:flex; align-items:center; gap:10px; padding:9px 12px; border:1px solid #e4e9f0; border-radius:8px; margin-bottom:8px; background:#fafcfe; transition:background .12s; }
+.att-row:hover { background:#f0f6fd; }
+.att-row .att-ic { width:34px; height:34px; border-radius:8px; background:linear-gradient(135deg,#e8f1fc,#d7e7f9); color:#2f6fbe; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:11px; font-weight:700; }
+.att-row .att-info { flex:1; min-width:0; }
+.att-row .att-info b { display:block; font-size:13px; color:#33404f; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.att-row .att-info span { font-size:11.5px; color:#98a2b0; }
+.att-empty { font-size:12.5px; color:#98a2b0; padding:10px 0 2px; }
+/* ============ 打印 ============ */
+#printArea { display:none; }
+.p-head { text-align:center; margin-bottom:6px; }
+.p-head .co { font-size:20px; font-weight:700; letter-spacing:2px; }
+.p-head .ft { font-size:16px; font-weight:600; margin-top:4px; }
+.p-meta { display:flex; justify-content:space-between; font-size:12px; margin:8px 2px 6px; }
+.p-table th { background:#f0f0f0 !important; color:#000 !important; border-top:1px solid #000; }
+.p-table th, .p-table td { border:1px solid #000; padding:5px 4px; font-size:12px; }
+.p-foot { display:flex; justify-content:space-between; font-size:12px; margin-top:10px; }
+.p-note { font-size:11px; color:#444; margin-top:8px; }
+@media print {
+  #loginView, #app, #modalMask { display:none !important; }
+  #printArea { display:block !important; }
+  body { background:#fff; }
+  @page { margin:12mm; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================= 登录 ================= -->
+<div id="loginView">
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="login-glow"></div>
+  <div class="login-card">
+    <div class="lc-logo"><img src="logo.jpg" alt="公司logo"></div>
+    <div class="lc-tag">Ningbo Hotion Cable Co., Ltd</div>
+    <div class="lc-title" id="brandCo">宁波泓汛线缆有限公司</div>
+    <div class="lc-sub">内部管理系统 ·（目前验厂使用）</div>
+    <div class="lc-field">
+      <input id="liUser" placeholder="请输入账号" autocomplete="off">
+    </div>
+    <div class="lc-field">
+      <input id="liPass" type="password" placeholder="请输入密码" onkeydown="if(event.key==='Enter')doLogin()">
+      <span class="eye" onclick="togglePwd()" title="显示/隐藏密码"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#5f7189" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></span>
+    </div>
+    <button class="lc-btn" onclick="doLogin()">登录系统</button>
+  </div>
+</div>
+
+<!-- ================= 主界面 ================= -->
+<div id="app" style="display:none">
+  <aside id="sidebar">
+    <div class="logo">
+      <div class="mark"><img src="logo.jpg" alt=""></div>
+      <div><b id="sbCo">宁波泓汛线缆有限公司</b><span>内部管理系统</span></div>
+    </div>
+    <div id="navBox"></div>
+  </aside>
+  <div id="mainWrap">
+    <header id="topbar">
+      <div class="tb-left"><div class="tb-title" id="tbTitle">概览</div><div class="tb-date" id="tbDate"></div></div>
+      <div class="tb-user">
+        <div class="avatar" id="tbAvatar"></div>
+        <div><b id="tbUser"></b>（<span id="tbRole"></span>）</div>
+        <span class="role-chip" id="tbRoleChip"></span>
+        <button class="btn btn-gray btn-sm" style="margin-left:10px" onclick="doLogout()">退出登录</button>
+      </div>
+    </header>
+    <main id="page"></main>
+  </div>
+</div>
+
+<div id="modalMask" onclick="if(event.target===this)closeModal()"><div id="modalBox"></div></div>
+<div id="printArea"></div>
+
+<script>
+/* ==================== 基础 ==================== */
+var DB_KEY = 'hongxun_qms_v2';
+var SS_KEY = 'hongxun_user';
+var DEPTS = ['总经理室','管理者代表','品质部','技术部','生产部','设备部','仓库','采购部','销售部','行政部','财务部'];
+var CATEGORIES = ['质量手册','程序文件','作业指导书','表单/记录','外来文件','管理制度'];
+var ROLE_NAME = { admin:'管理员', wenkong:'文控中心', cangku:'仓库', prod:'生产部' };
+var FORMS = {
+  docList:  { code:'HX-QR-4.2.3-01', ver:'A/0', title:'受控文件清单' },
+  issueReg: { code:'HX-QR-4.2.3-02', ver:'A/0', title:'文件发放/回收登记表' },
+  logRpt:   { code:'HX-QR-4.2.4-01', ver:'A/0', title:'系统操作日志' },
+  pickForm: { code:'HX-QR-7.5-03',  ver:'A/0', title:'领料申请单' },
+  pickList: { code:'HX-QR-7.5-04',  ver:'A/0', title:'领料申请汇总表' }
+};
+
+function $id(x){ return document.getElementById(x); }
+function esc(s){ return (s===null||s===undefined)?'':String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function pad(n){ return n<10?'0'+n:''+n; }
+function todayStr(d){ d=d||new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function nowStr(){ var d=new Date(); return todayStr(d)+' '+pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()); }
+function daysAgo(n){ var d=new Date(); d.setDate(d.getDate()-n); return todayStr(d); }
+function fmtSize(b){ if(!b&&b!==0) return ''; if(b<1024) return b+' B'; if(b<1048576) return (b/1024).toFixed(1)+' KB'; return (b/1048576).toFixed(2)+' MB'; }
+function nextVersion(v){
+  var m = /^([A-Za-z])\/(\d+)$/.exec((v||'').trim());
+  if(m) return m[1].toUpperCase()+'/'+(parseInt(m[2],10)+1);
+  var m2 = /^(V?)(\d+)\.(\d+)$/.exec((v||'').trim());
+  if(m2) return m2[2]+'.'+(parseInt(m2[3],10)+1);
+  return '';
+}
+var WEEK = ['日','一','二','三','四','五','六'];
+
+function emptyDB(){
+  return {
+    meta:{ seq:100 },
+    settings:{ company:'宁波泓汛线缆有限公司' },
+    users:[
+      { id:'U1', username:'陈海波',  name:'陈海波',     role:'admin',   password:'123456' },
+      { id:'U2', username:'wenkong', name:'文控中心',   role:'wenkong', password:'123456' },
+      { id:'U3', username:'cangku',  name:'仓库管理员', role:'cangku',  password:'123456' },
+      { id:'U4', username:'chejian', name:'生产领料员', role:'prod',    password:'123456' }
+    ],
+    docs:[], issues:[], stocks:[], picks:[], logs:[], files:[]
+  };
+}
+function loadDB(){
+  try{
+    var raw = localStorage.getItem(DB_KEY);
+    if(raw){ return JSON.parse(raw); }
+  }catch(e){}
+  return null;
+}
+function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
+var DB = loadDB();
+if(!DB){ DB = emptyDB(); saveDB(); }
+if(!DB.files){ DB.files = []; }
+/* 一次性迁移：管理员账号 admin → 陈海波（保留已有数据） */
+(function(){
+  var a = DB.users.find(function(u){ return u.role==='admin' && u.username==='admin'; });
+  if(a){ a.username='陈海波'; a.name='陈海波'; saveDB(); }
+})();
+
+/* ==================== 图标 ==================== */
+function svgIcon(name){
+  var s = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">';
+  var P = {
+    dash:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+    book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+    clip:'<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h6"/>',
+    search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+    box:'<path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3.3 8.3L12 13l8.7-4.7M12 13v9"/>',
+    pencil:'<path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>',
+    list:'<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/>',
+    gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+    paper:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>'
+  };
+  return s + (P[name]||P.paper) + '</svg>';
+}
+
+/* ==================== 会话 ==================== */
+function currentUser(){
+  try{ var s = sessionStorage.getItem(SS_KEY); return s? JSON.parse(s):null; }catch(e){ return null; }
+}
+function togglePwd(){
+  var p = $id('liPass');
+  p.type = (p.type === 'password') ? 'text' : 'password';
+}
+function doLogin(){
+  var u = $id('liUser').value.trim(), p = $id('liPass').value;
+  var f = DB.users.find(function(x){ return x.username===u && x.password===p; });
+  if(!f){ alert('账号或密码错误'); return; }
+  sessionStorage.setItem(SS_KEY, JSON.stringify(f));
+  addLog('登录', '系统', '用户 '+f.name+'（'+ROLE_NAME[f.role]+'）登录系统');
+  saveDB();
+  enterApp();
+}
+function doLogout(){
+  var u = currentUser();
+  if(u){ addLog('退出登录','系统','用户 '+u.name+' 退出系统'); saveDB(); }
+  sessionStorage.removeItem(SS_KEY);
+  location.reload();
+}
+function addLog(action, target, detail){
+  var u = currentUser()||{ username:'-', name:'-' };
+  DB.logs.unshift({ id:'L'+(++DB.meta.seq), time:nowStr(), user:u.username, name:u.name, action:action, target:target, detail:detail });
+}
+
+/* ==================== 框架 ==================== */
+var MENUS = [
+  { id:'dash',    name:'概览',        icon:'dash',   roles:['admin','wenkong','cangku','prod'] },
+  { id:'docs',    name:'文件台账',    icon:'book',   roles:['admin','wenkong'] },
+  { id:'issues',  name:'发放回收登记', icon:'clip',  roles:['admin','wenkong'] },
+  { id:'query',   name:'文件查询',    icon:'search', roles:['admin','wenkong','cangku','prod'] },
+  { id:'picks',   name:'领料申请',    icon:'pencil', roles:['admin','wenkong','cangku','prod'] },
+  { id:'logs',    name:'操作日志',    icon:'list',   roles:['admin','wenkong'] },
+  { id:'settings',name:'系统设置',    icon:'gear',   roles:['admin'] }
+];
+var curPage = '';
+function enterApp(){
+  var u = currentUser();
+  if(!u) return;
+  $id('loginView').style.display='none';
+  $id('app').style.display='flex';
+  var co = DB.settings.company;
+  $id('sbCo').textContent = co;
+  $id('brandCo').textContent = co;
+  $id('tbUser').textContent = u.name;
+  $id('tbRole').textContent = u.username;
+  $id('tbRoleChip').textContent = ROLE_NAME[u.role];
+  $id('tbAvatar').textContent = u.name.charAt(0);
+  var d = new Date();
+  $id('tbDate').textContent = d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日 星期'+WEEK[d.getDay()];
+  var box = $id('navBox'); box.innerHTML='';
+  MENUS.forEach(function(m){
+    if(m.roles.indexOf(u.role)<0) return;
+    var el = document.createElement('div');
+    el.className='nav-item'; el.id='nav_'+m.id;
+    el.innerHTML = svgIcon(m.icon)+'<span>'+m.name+'</span>';
+    el.onclick=function(){ showPage(m.id); };
+    box.appendChild(el);
+  });
+  showPage('dash');
+}
+function showPage(id){
+  curPage=id;
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  var nav=$id('nav_'+id); if(nav) nav.classList.add('active');
+  var m = MENUS.find(function(x){return x.id===id;});
+  $id('tbTitle').textContent = m? m.name : '';
+  if(id==='dash') renderDash();
+  if(id==='docs') renderDocs();
+  if(id==='issues') renderIssues();
+  if(id==='query') renderQuery();
+  if(id==='picks') renderPicks();
+  if(id==='logs') renderLogs();
+  if(id==='settings') renderSettings();
+}
+
+/* ==================== 通用弹窗 ==================== */
+function openModal(html, wide){
+  $id('modalBox').style.width = wide? '900px':'660px';
+  $id('modalBox').innerHTML = html;
+  $id('modalMask').style.display='flex';
+}
+function closeModal(){ $id('modalMask').style.display='none'; }
+function modalHead(title){ return '<h3>'+title+'<button class="x" onclick="closeModal()">✕</button></h3>'; }
+
+function deptOptions(sel){
+  return DEPTS.map(function(d){ return '<option '+(d===sel?'selected':'')+'>'+d+'</option>'; }).join('');
+}
+function catOptions(sel){
+  return CATEGORIES.map(function(d){ return '<option '+(d===sel?'selected':'')+'>'+d+'</option>'; }).join('');
+}
+
+/* ==================== 电子文档（IndexedDB 存储） ==================== */
+var _idbPromise = null;
+function openIDB(){
+  if(_idbPromise) return _idbPromise;
+  _idbPromise = new Promise(function(res, rej){
+    var r = indexedDB.open('hongxun_files', 1);
+    r.onupgradeneeded = function(){ r.result.createObjectStore('files', { keyPath:'id' }); };
+    r.onsuccess = function(){ res(r.result); };
+    r.onerror = function(){ rej(r.error); };
+  });
+  return _idbPromise;
+}
+function idbPut(rec){
+  return openIDB().then(function(db){
+    return new Promise(function(res, rej){
+      var tx = db.transaction('files','readwrite');
+      tx.objectStore('files').put(rec);
+      tx.oncomplete = function(){ res(); };
+      tx.onerror = function(){ rej(tx.error); };
+    });
+  });
+}
+function idbGet(id){
+  return openIDB().then(function(db){
+    return new Promise(function(res, rej){
+      var tx = db.transaction('files','readonly');
+      var rq = tx.objectStore('files').get(id);
+      rq.onsuccess = function(){ res(rq.result); };
+      rq.onerror = function(){ rej(rq.error); };
+    });
+  });
+}
+function idbClear(){
+  return openIDB().then(function(db){
+    return new Promise(function(res, rej){
+      var tx = db.transaction('files','readwrite');
+      tx.objectStore('files').clear();
+      tx.oncomplete = function(){ res(); };
+      tx.onerror = function(){ rej(tx.error); };
+    });
+  });
+}
+function attExt(name){
+  var m = /\.([A-Za-z0-9]+)$/.exec(name||'');
+  return m? m[1].toUpperCase() : '文件';
+}
+function docFiles(docId){ return DB.files.filter(function(f){ return f.docId===docId; }); }
+function uploadAttachment(docId, inp){
+  var fs = inp.files; if(!fs || !fs.length) return;
+  var u = currentUser();
+  var jobs = [];
+  for(var i=0;i<fs.length;i++){
+    (function(file){
+      if(file.size > 100*1048576){ alert('文件过大（超过100MB）：'+file.name); return; }
+      var rec = { id:'F'+(++DB.meta.seq), docId:docId, name:file.name, size:file.size, type:file.type||'', version:'', uploadTime:nowStr(), uploader:u.name };
+      jobs.push(idbPut({ id:rec.id, blob:file }).then(function(){
+        DB.files.push(rec);
+        addLog('上传附件', rec.name, '关联文件（附件编号 '+rec.id+'，大小 '+fmtSize(rec.size)+'，上传人：'+u.name+'）');
+      }));
+    })(fs[i]);
+  }
+  Promise.all(jobs).then(function(){
+    saveDB(); alert('附件上传成功'); openDocDetail(docId);
+  }).catch(function(e){ alert('上传失败：'+e); });
+}
+function openAttachment(id){
+  idbGet(id).then(function(rec){
+    if(!rec || !rec.blob){ alert('附件内容缺失（可能是导入的备份未包含文件内容），请重新上传'); return; }
+    var meta = DB.files.find(function(f){return f.id===id;})||{};
+    var url = URL.createObjectURL(rec.blob);
+    var body;
+    if((meta.type||'').indexOf('image/')===0){
+      body = '<img src="'+url+'" style="max-width:100%;max-height:64vh;border:1px solid #e4e9f0;border-radius:8px">';
+    }else if((meta.type||'').indexOf('pdf')>-1 || /\.pdf$/i.test(meta.name||'')){
+      body = '<iframe src="'+url+'" style="width:100%;height:64vh;border:1px solid #e4e9f0;border-radius:8px"></iframe>';
+    }else if((meta.type||'').indexOf('text/')===0){
+      body = '<iframe src="'+url+'" style="width:100%;height:64vh;border:1px solid #e4e9f0;border-radius:8px;background:#fff"></iframe>';
+    }else{
+      body = '<div style="padding:40px;text-align:center;color:#8b93a1;font-size:13px">该格式（'+esc(attExt(meta.name))+'）不支持在线预览，请下载后用本地程序（Office/WPS）打开。</div>';
+    }
+    openModal(modalHead('预览：'+esc(meta.name||'附件'))+body+
+      '<div class="mfoot"><button class="btn btn-gray" onclick="closeModal()">关闭</button>'+
+      '<button class="btn" onclick="downloadAttachment(\''+id+'\')">下载保存</button></div>', true);
+    addLog('查阅附件', meta.name||id, '在线打开附件预览');
+    saveDB();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 10*60*1000);
+  }).catch(function(e){ alert('打开失败：'+e); });
+}
+function downloadAttachment(id){
+  idbGet(id).then(function(rec){
+    if(!rec || !rec.blob){ alert('附件内容缺失，请重新上传'); return; }
+    var meta = DB.files.find(function(f){return f.id===id;})||{};
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(rec.blob);
+    a.download = meta.name || ('attachment_'+id);
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 800);
+    addLog('下载附件', meta.name||id, '下载附件到本地');
+    saveDB();
+  }).catch(function(e){ alert('下载失败：'+e); });
+}
+function attListHTML(d){
+  var fs = docFiles(d.id);
+  var h = '<h3 style="border-left-color:#f5a623;margin-top:16px">电子文档（附件 '+fs.length+' 个）</h3>';
+  if(!fs.length) h += '<div class="att-empty">暂无附件。可将盖章扫描件、Word/Excel/PDF 源文件上传到此处，验厂时可直接在线调阅。</div>';
+  fs.forEach(function(f){
+    h += '<div class="att-row"><div class="att-ic">'+esc(attExt(f.name).slice(0,4))+'</div>'+
+      '<div class="att-info"><b>'+esc(f.name)+'</b><span>'+fmtSize(f.size)+' · 上传人 '+esc(f.uploader)+' · '+esc(f.uploadTime)+'</span></div>'+
+      '<button class="btn btn-white btn-sm" onclick="openAttachment(\''+f.id+'\')">在线打开</button>'+
+      '<button class="btn btn-gray btn-sm" onclick="downloadAttachment(\''+f.id+'\')">下载</button></div>';
+  });
+  h += '<label class="btn btn-sm" style="margin-top:4px;display:inline-block">+ 上传电子文档<input type="file" multiple style="display:none" onchange="uploadAttachment(\''+d.id+'\', this)"></label>';
+  return h;
+}
+
+/* ==================== 打印 ==================== */
+function printReport(title, form, innerHTML){
+  var u = currentUser()||{name:'-'};
+  $id('printArea').innerHTML =
+    '<div class="p-head"><div class="co">'+esc(DB.settings.company)+'</div><div class="ft">'+esc(title)+'</div></div>'+
+    '<div class="p-meta"><span>表单编号：'+esc(form.code)+'</span><span>版本：'+esc(form.ver)+'</span><span>受控状态：受控</span></div>'+
+    innerHTML+
+    '<div class="p-foot"><span>打印人：'+esc(u.name)+'</span><span>打印时间：'+nowStr()+'</span><span>系统自动生成（数据不可篡改，全程留痕）</span></div>'+
+    '<div class="p-note">说明：本打印件由内部管理系统直接输出，用于归档/现场调阅；系统内不提供删除功能，所有修改均有操作日志可查。</div>';
+  window.print();
+}
+function pageHeadHTML(sub){
+  return '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span>'+esc(DB.settings.company)+'</span><span>'+esc(sub||'')+'</span></div>';
+}
+
+/* ==================== 导出 ==================== */
+function downloadFile(name, content, mime){
+  var blob = new Blob([content], {type:(mime||'text/plain')+';charset=utf-8'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500);
+}
+function exportCSV(fname, headers, rows){
+  var csv = '\uFEFF' + headers.join(',') + '\n' + rows.map(function(r){
+    return r.map(function(c){ c=(c===null||c===undefined)?'':String(c); return /[",\n]/.test(c)? '"'+c.replace(/"/g,'""')+'"' : c; }).join(',');
+  }).join('\n');
+  downloadFile(fname+'_'+todayStr()+'.csv', csv, 'text/csv');
+  addLog('导出数据','Excel导出','导出文件：'+fname);
+  saveDB();
+}
+function exportBackup(){
+  downloadFile('泓汛系统备份_'+todayStr()+'.json', JSON.stringify(DB,null,2), 'application/json');
+  DB.meta.lastBackup = nowStr();
+  addLog('数据备份','JSON导出','导出全量数据备份');
+  saveDB();
+  alert('备份文件已下载，请妥善保存（建议每周备份一次到U盘）。\n注意：备份包含全部登记数据；电子文档附件为大文件，请通过"下载"按钮另行保存原件。');
+}
+function importBackup(inp){
+  var f = inp.files[0]; if(!f) return;
+  if(!confirm('导入备份将【覆盖】当前系统全部数据，确定继续吗？')){ inp.value=''; return; }
+  var r = new FileReader();
+  r.onload = function(){
+    try{
+      var d = JSON.parse(r.result);
+      if(!d.users || !d.docs || !d.meta) throw new Error('格式不正确');
+      DB = d;
+      if(!DB.files) DB.files = [];
+      addLog('数据恢复','JSON导入','导入备份文件：'+f.name+'（附件原件不在备份内，如需要请重新上传）');
+      saveDB();
+      alert('恢复成功'); enterApp();
+    }catch(e){ alert('导入失败：'+e.message); }
+  };
+  r.readAsText(f);
+}
+
+/* ==================== 概览 ==================== */
+function renderDash(){
+  var cDoc = DB.docs.filter(function(d){return d.status==='受控有效';}).length;
+  var cOld = DB.docs.filter(function(d){return d.status==='已作废';}).length;
+  var cUse = DB.issues.filter(function(i){return i.status==='在用';}).length;
+  var cVoid = DB.issues.filter(function(i){return i.status==='已作废';}).length;
+  var cPick = DB.picks.filter(function(p){return p.status==='待审批'||p.status==='待发料';}).length;
+  var cAtt = DB.files.length;
+  var lb = DB.meta.lastBackup? DB.meta.lastBackup : '从未备份';
+  var u = currentUser();
+  var html =
+  '<div class="stat-row">'+
+    '<div class="stat-box green"><div class="num">'+cDoc+'</div><div class="lbl">受控有效文件</div></div>'+
+    '<div class="stat-box"><div class="num">'+cUse+'</div><div class="lbl">在用发放份数</div></div>'+
+    '<div class="stat-box warn"><div class="num">'+cVoid+'</div><div class="lbl">已回收作废份数</div></div>'+
+    '<div class="stat-box red"><div class="num">'+cOld+'</div><div class="lbl">已作废文件（台账）</div></div>'+
+    '<div class="stat-box"><div class="num">'+cAtt+'</div><div class="lbl">电子文档（附件）</div></div>'+
+    (u.role==='admin'||u.role==='cangku'||u.role==='prod' ? '<div class="stat-box warn"><div class="num">'+cPick+'</div><div class="lbl">待处理领料申请</div></div>' : '')+
+  '</div>'+
+  '<div class="card" style="margin-top:18px"><h3>数据备份提醒</h3>上次备份时间：<b>'+esc(lb)+'</b>　<button class="btn btn-sm" onclick="exportBackup()">立即备份（导出JSON）</button>'+
+  '<span style="font-size:12px;color:#999;margin-left:10px">数据保存在本机浏览器中，请定期备份文件，防止数据丢失。</span></div>'+
+  '<div class="card"><h3>最近操作日志（最近10条）</h3>'+logTableHTML(DB.logs.slice(0,10))+'</div>';
+  $id('page').innerHTML = html;
+}
+function logTableHTML(arr){
+  if(!arr.length) return '<div style="color:#999;padding:14px;text-align:center">暂无记录</div>';
+  var h = '<table><tr><th style="width:150px">时间</th><th style="width:90px">操作人</th><th style="width:100px">操作</th><th style="width:170px">对象</th><th>详情</th></tr>';
+  arr.forEach(function(l){
+    h += '<tr><td>'+esc(l.time)+'</td><td>'+esc(l.name)+'</td><td>'+esc(l.action)+'</td><td style="text-align:left">'+esc(l.target)+'</td><td style="text-align:left">'+esc(l.detail)+'</td></tr>';
+  });
+  return h+'</table>';
+}
+
+/* ==================== 文件台账 ==================== */
+var docFilter = { kw:'', status:'' };
+function renderDocs(){
+  $id('page').innerHTML =
+  '<div class="toolbar">'+
+    '<input placeholder="搜索编号/名称" style="width:200px" value="'+esc(docFilter.kw)+'" oninput="docFilter.kw=this.value;renderDocsTable()">'+
+    '<select onchange="docFilter.status=this.value;renderDocsTable()"><option value="">全部状态</option><option '+(docFilter.status==='受控有效'?'selected':'')+'>受控有效</option><option '+(docFilter.status==='已作废'?'selected':'')+'>已作废</option></select>'+
+    '<div class="sp"></div>'+
+    '<button class="btn" onclick="openDocForm()">+ 新增文件</button>'+
+    '<button class="btn btn-white" onclick="printDocList()">打印受控文件清单</button>'+
+    '<button class="btn btn-white" onclick="exportDocsCSV()">导出Excel</button>'+
+  '</div>'+
+  '<div id="docsTable"></div>';
+  renderDocsTable();
+}
+function renderDocsTable(){
+  var list = DB.docs.filter(function(d){
+    if(docFilter.status && d.status!==docFilter.status) return false;
+    if(docFilter.kw && (d.code+d.name).toLowerCase().indexOf(docFilter.kw.toLowerCase())<0) return false;
+    return true;
+  });
+  var h = '<table><thead><tr><th style="width:50px">序号</th><th style="width:130px">文件编号</th><th>文件名称</th><th style="width:100px">类别</th><th style="width:70px">最新版本</th><th style="width:90px">状态</th><th style="width:95px">建立日期</th><th style="width:70px">附件</th><th style="width:265px">操作</th></tr></thead><tbody>';
+  if(!list.length) h += '<tr><td colspan="9" style="color:#999;padding:16px">无匹配记录</td></tr>';
+  list.forEach(function(d,i){
+    var issueCount = DB.issues.filter(function(x){return x.docId===d.id && x.status==='在用';}).length;
+    var attCount = docFiles(d.id).length;
+    h += '<tr><td>'+(i+1)+'</td><td>'+esc(d.code)+'</td><td style="text-align:left">'+esc(d.name)+'</td><td>'+esc(d.category)+'</td><td>'+esc(d.latestVersion)+'</td>'+
+      '<td><span class="badge '+(d.status==='受控有效'?'b-green':'b-gray')+'">'+esc(d.status)+'</span></td><td>'+esc(d.createdAt)+'</td>'+
+      '<td>'+(attCount? '<span class="badge b-blue">'+attCount+'</span>' : '<span style="color:#c3ccd8">—</span>')+'</td>'+
+      '<td>'+
+      (d.status==='受控有效'?
+        '<button class="link-btn" onclick="openIssueForm(\''+d.id+'\')">发放登记</button>'+
+        '<button class="link-btn" onclick="openVerForm(\''+d.id+'\')">升版</button>'+
+        '<button class="link-btn" onclick="openDocForm(\''+d.id+'\')">编辑</button>'+
+        '<button class="link-btn red" onclick="voidDoc(\''+d.id+'\')">作废</button> | ':'')+
+      '<button class="link-btn" onclick="openDocDetail(\''+d.id+'\')">详情/附件</button>'+
+      '<span style="font-size:11px;color:#98a2b0"> 在用'+issueCount+'份</span>'+
+      '</td></tr>';
+  });
+  $id('docsTable').innerHTML = h+'</tbody></table>';
+}
+function openDocForm(id){
+  var d = id? DB.docs.find(function(x){return x.id===id;}) : null;
+  var u = currentUser();
+  if(d && u.role!=='admin' && u.role!=='wenkong'){ alert('无权限'); return; }
+  openModal(
+    modalHead(d?'编辑文件（编号与版本不可修改）':'新增受控文件')+
+    '<div class="fgrid">'+
+    '<div class="fitem"><label>文件编号 <span class="req">*</span></label><input id="fCode" value="'+esc(d?d.code:'')+'" '+(d?'disabled':'')+' placeholder="如 HX-QP-03"></div>'+
+    '<div class="fitem"><label>文件类别 <span class="req">*</span></label><select id="fCat">'+catOptions(d?d.category:'程序文件')+'</select></div>'+
+    '<div class="fitem full"><label>文件名称 <span class="req">*</span></label><input id="fName" value="'+esc(d?d.name:'')+'"></div>'+
+    (d?'':'<div class="fitem"><label>初始版本 <span class="req">*</span></label><input id="fVer" placeholder="如 A/0" value="A/0"></div>')+
+    '<div class="fitem full"><label>备注</label><textarea id="fRemark" rows="2">'+esc(d?d.remark:'')+'</textarea></div>'+
+    '</div><div class="form-tip">所有新增/修改将记入操作日志，留痕可查。保存后可在"详情"中上传电子文档（PDF/Word/Excel/图片）。</div>'+
+    '<div class="mfoot"><button class="btn btn-gray" onclick="closeModal()">取消</button><button class="btn" onclick="saveDoc(\''+(d?d.id:'')+'\')">保存</button></div>'
+  );
+}
+function saveDoc(id){
+  var code = $id('fCode').value.trim(), name = $id('fName').value.trim();
+  if(!code || !name){ alert('编号和名称为必填项'); return; }
+  if(!id){
+    if(DB.docs.some(function(d){return d.code===code;})){ alert('文件编号已存在，不可重复'); return; }
+    var ver = $id('fVer').value.trim(); if(!ver){ alert('请填写初始版本'); return; }
+    var d = { id:'D'+(++DB.meta.seq), code:code, name:name, category:$id('fCat').value, latestVersion:ver, status:'受控有效', remark:$id('fRemark').value.trim(), createdAt:todayStr(), createdBy:currentUser().username };
+    DB.docs.push(d);
+    addLog('新增文件', code+' '+name, '建立受控文件，类别：'+d.category+'，初始版本：'+ver);
+  }else{
+    var d = DB.docs.find(function(x){return x.id===id;});
+    var before = '名称['+d.name+'] 类别['+d.category+'] 备注['+d.remark+']';
+    if(d.name!==name || d.category!==$id('fCat').value || d.remark!==$id('fRemark').value.trim()){
+      d.name=name; d.category=$id('fCat').value; d.remark=$id('fRemark').value.trim();
+      addLog('修改文件', d.code+' '+d.name, '修改前：'+before+'；修改后：名称['+d.name+'] 类别['+d.category+'] 备注['+d.remark+']');
+    }
+  }
+  saveDB(); closeModal(); renderDocsTable();
+}
+function openVerForm(id){
+  var d = DB.docs.find(function(x){return x.id===id;});
+  var sug = nextVersion(d.latestVersion) || '';
+  openModal(
+    modalHead('文件升版')+
+    '<div class="fgrid">'+
+    '<div class="fitem"><label>文件编号</label><input value="'+esc(d.code)+'" disabled></div>'+
+    '<div class="fitem"><label>当前版本</label><input value="'+esc(d.latestVersion)+'" disabled></div>'+
+    '<div class="fitem"><label>新版本号 <span class="req">*</span></label><input id="vNew" value="'+esc(sug)+'"></div>'+
+    '<div class="fitem"><label>升版日期</label><input id="vDate" type="date" value="'+todayStr()+'"></div>'+
+    '<div class="fitem full"><label>升版说明</label><textarea id="vRemark" rows="2" placeholder="修订内容简述"></textarea></div>'+
+    '</div>'+
+    '<div class="note" style="margin-top:14px">确认升版后：该文件所有 <b>"在用"</b> 的旧版发放记录将自动填写回收日期并标记 <b>已作废</b>，随后可为新版重新做发放登记。</div>'+
+    '<div class="mfoot"><button class="btn btn-gray" onclick="closeModal()">取消</button><button class="btn btn-orange" onclick="doVersion(\''+d.id+'\')">确认升版</button></div>'
+  );
+}
+function doVersion(id){
+  var d = DB.docs.find(function(x){return x.id===id;});
+  var nv = $id('vNew').value.trim();
+  if(!nv){ alert('请填写新版本号'); return; }
+  var oldV = d.latestVersion;
+  var n = 0;
+  DB.issues.forEach(function(i){
+    if(i.docId===id && i.version===oldV && i.status==='在用'){
+      i.status='已作废'; i.recycleDate=$id('vDate').value||todayStr(); i.recycleOperator=currentUser().name;
+      i.remark=(i.remark?i.remark+'；':'')+'升版'+nv+'后自动回收作废';
+      n++;
+    }
+  });
+  d.latestVersion = nv;
+  addLog('文件升版', d.code+' '+d.name, '版本 '+oldV+' 升版为 '+nv+'；自动回收旧版发放记录 '+n+' 份并标记作废'+($id('vRemark').value.trim()?'；说明：'+$id('vRemark').value.trim():''));
+  saveDB(); closeModal(); renderDocsTable();
+}
+function voidDoc(id){
+  var d = DB.docs.find(function(x){return x.id===id;});
+  if(!confirm('确定将文件【'+d.code+' '+d.name+'】整份作废吗？\n其所有在用发放记录将自动回收并标记作废。\n（此操作会记入日志，不可删除）')) return;
+  var n=0;
+  DB.issues.forEach(function(i){
+    if(i.docId===id && i.status==='在用'){ i.status='已作废'; i.recycleDate=todayStr(); i.recycleOperator=currentUser().name; i.remark=(i.remark?i.remark+'；':'')+'文件整体作废，自动回收'; n++; }
+  });
+  d.status='已作废';
+  addLog('文件作废', d.code+' '+d.name, '文件整份作废；自动回收在用发放记录 '+n+' 份');
+  saveDB(); renderDocsTable();
+}
+function openDocDetail(id){
+  var d = DB.docs.find(function(x){return x.id===id;});
+  var iss = DB.issues.filter(function(x){return x.docId===id;});
+  var rows = iss.map(function(i,idx){
+    return '<tr><td>'+(idx+1)+'</td><td>'+esc(i.version)+'</td><td>'+esc(i.issueDate)+'</td><td>'+esc(i.dept)+'</td><td>'+esc(i.receiver)+'</td><td>'+esc(i.copies)+'</td><td>'+esc(i.recycleDate||'—')+'</td><td><span class="badge '+(i.status==='在用'?'b-green':(i.status==='已回收'?'b-orange':'b-red'))+'">'+esc(i.status)+'</span></td></tr>';
+  }).join('');
+  openModal(
+    modalHead('文件全生命周期（发放/回收/作废记录）')+
+    pageHeadHTML('文件详情')+
+    '<table style="margin-bottom:4px"><tr><th style="width:110px">文件编号</th><td style="text-align:left">'+esc(d.code)+'</td><th style="width:90px">文件名称</th><td style="text-align:left">'+esc(d.name)+'</td></tr>'+
+    '<tr><th>类别</th><td style="text-align:left">'+esc(d.category)+'</td><th>最新版本</th><td style="text-align:left">'+esc(d.latestVersion)+'</td></tr>'+
+    '<tr><th>状态</th><td style="text-align:left"><span class="badge '+(d.status==='受控有效'?'b-green':'b-gray')+'">'+esc(d.status)+'</span></td><th>建立日期</th><td style="text-align:left">'+esc(d.createdAt)+'</td></tr></table>'+
+    '<h3 style="margin-top:14px;border:none;font-size:14px">发放回收记录（共'+iss.length+'条）</h3>'+
+    '<table class="p-table"><thead><tr><th>序号</th><th>版本</th><th>发放日期</th><th>接收部门</th><th>接收人</th><th>份数</th><th>回收日期</th><th>作废状态</th></tr></thead><tbody>'+(rows||'<tr><td colspan="8">暂无发放记录</td></tr>')+'</tbody></table>'+
+    attListHTML(d)+
+    '<div class="mfoot"><button class="btn btn-gray" onclick="closeModal()">关闭</button><button class="btn btn-white" onclick="printDocDetail(\''+d.id+'\')">打印该文件记录</button></div>', true
+  );
+}
+function printDocDetail(id){
+  var d = DB.docs.find(function(x){return x.id===id;});
+  var iss = DB.issues.filter(function(x){return x.docId===id;});
+  var rows = iss.map(function(i,idx){
+    return '<tr><td>'+(idx+1)+'</td><td>'+esc(i.version)+'</td><td>'+esc(i.issueDate)+'</td><td>'+esc(i.dept)+'</td><td>'+esc(i.receiver)+'</td><td>'+esc(i.copies)+'</td><td>'+esc(i.recycleDate||'—')+'</td><td>'+esc(i.status)+'</td></tr>';
+  }).join('');
+  printReport('文件发放/回收记录单', FORMS.issueReg,
+    '<table class="p-table" style="margin-bottom:6px"><tr><th style="width:90px">文件编号</th><td style="text-align:left">'+esc(d.code)+'</td><th style="width:90px">文件名称</th><td style="text-align:left">'+esc(d.name)+'</td><th style="width:70px">最新版本</th><td>'+esc(d.latestVersion)+'</td><th style="width:70px">状态</th><td>'+esc(d.status)+'</td></tr></table>'+
+    '<table class="p-table"><tr><th>序号</th><th>版本</th><th>发放日期</th><th>接收部门</th><th>接收人</th><th>份数</th><th>回收日期</th><th>作废状态</th></tr>'+(rows||'<tr><td colspan="8">暂无</td></tr>')+'</table>');
+}
+function printDocList(){
+  var list = DB.docs;
+  var rows = list.map(function(d,i){
+    var inuse = DB.issues.filter(function(x){return x.docId===d.id&&x.status==='在用';}).length;
+    return '<tr><td>'+(i+1)+'</td><td>'+esc(d.code)+'</td><td style="text-align:left">'+esc(d.name)+'</td><td>'+esc(d.category)+'</td><td>'+esc(d.latestVersion)+'</td><td>'+esc(d.status)+'</td><td>'+inuse+'</td><td>'+esc(d.createdAt)+'</td></tr>';
+  }).join('');
+  printReport(FORMS.docList.title, FORMS.docList,
+    '<table class="p-table"><tr><th>序号</th><th>文件编号</th><th>文件名称</th><th>类别</th><th>最新版本</th><th>状态</th><th>在用份数</th><th>建立日期</th></tr>'+rows+'</table>');
+}
+function exportDocsCSV(){
+  exportCSV('受控文件清单', ['序号','文件编号','文件名称','类别','最新版本','状态','建立日期','备注'],
+    DB.docs.map(function(d,i){ return [i+1,d.code,d.name,d.category,d.latestVersion,d.status,d.createdAt,d.remark]; }));
+}
+
+/* ==================== 发放回收登记 ==================== */
+var issFilter = { kw:'', status:'', dept:'', d1:'', d2:'' };
+function renderIssues(){
+  var depts = DEPTS.map(function(d){ return '<option '+(issFilter.dept===d?'selected':'')+'>'+d+'</option>'; }).join('');
+  $id('page').innerHTML =
+  '<div class="toolbar">'+
+    '<input placeholder="搜索编号/名称/接收人" style="width:190px" value="'+esc(issFilter.kw)+'" oninput="issFilter.kw=this.value;renderIssTable()">'+
+    '<select style="width:110px" onchange="issFilter.dept=this.value;renderIssTable()"><option value="">全部部门</option>'+depts+'</select>'+
+    '<select style="width:110px" onchange="issFilter.status=this.value;renderIssTable()"><option value="">全部状态</option><option '+(issFilter.status==='在用'?'selected':'')+'>在用</option><option '+(issFilter.status==='已回收'?'selected':'')+'>已回收</option><option '+(issFilter.status==='已作废'?'selected':'')+'>已作废</option></select>'+
+    '<input type="date" style="width:135px" value="'+esc(issFilter.d1)+'" onchange="issFilter.d1=this.value;renderIssTable()" title="发放日期从">'+
+    '<span style="color:#999;font-size:12px">至</span>'+
+    '<input type="date" style="width:135px" value="'+esc(issFilter.d2)+'" onchange="issFilter.d2=this.value;renderIssTable()" title="发放日期到">'+
+    '<div class="sp"></div>'+
+    '<button class="btn" onclick="openIssueForm()">+ 新增发放登记</button>'+
+    '<button class="btn btn-white" onclick="printIssueList()">打印登记表</button>'+
+    '<button class="btn btn-white" onclick="exportIssuesCSV()">导出Excel</button>'+
+  '</div>'+
+  '<div id="issTable"></div>';
+  renderIssTable();
+}
+function issList(){
+  return DB.issues.filter(function(i){
+    if(issFilter.status && i.status!==issFilter.status) return false;
+    if(issFilter.dept && i.dept!==issFilter.dept) return false;
+    if(issFilter.d1 && i.issueDate<issFilter.d1) return false;
+    if(issFilter.d2 && i.issueDate>issFilter.d2) return false;
+    if(issFilter.kw && (i.code+i.name+i.receiver+i.dept).toLowerCase().indexOf(issFilter.kw.toLowerCase())<0) return false;
+    return true;
+  });
+}
+function renderIssTable(){
+  var list = issList();
+  var h = '<table><thead><tr><th style="width:46px">序号</th><th style="width:125px">文件编号</th><th>文件名称</th><th style="width:60px">版本</th><th style="width:95px">发放日期</th><th style="width:95px">接收部门</th><th style="width:80px">接收人</th><th style="width:50px">份数</th><th style="width:95px">回收日期</th><th style="width:85px">作废状态</th><th style="width:210px">操作</th></tr></thead><tbody>';
+  if(!list.length) h += '<tr><td colspan="11" style="color:#999;padding:16px">无匹配记录</td></tr>';
+  list.forEach(function(i,idx){
+    var cls = i.status==='在用'?'b-green':(i.status==='已回收'?'b-orange':'b-red');
+    var ops = '';
+    if(i.status==='在用'){
+      ops = '<button class="link-btn" onclick="recycleIssue(\''+i.id+'\')">回收</button>'+
+            '<button class="link-btn red" onclick="voidIssue(\''+i.id+'\')">作废</button>'+
+            '<button class="link-btn" onclick="editIssue(\''+i.id+'\')">修改</button>';
+    }else{
+      ops = '<span style="font-size:11px;color:#98a2b0">已'+esc(i.status)+'（不可修改）</span>';
+    }
+    ops += '<button class="link-btn gray" onclick="issueLog(\''+i.id+'\')">留痕</button>';
+    h += '<tr><td>'+(idx+1)+'</td><td>'+esc(i.code)+'</td><td style="text-align:left">'+esc(i.name)+'</td><td>'+esc(i.version)+'</td><td>'+esc(i.issueDate)+'</td><td>'+esc(i.dept)+'</td><td>'+esc(i.receiver)+'</td><td>'+esc(i.copies)+'</td><td>'+esc(i.recycleDate||'—')+'</td><td><span class="badge '+cls+'">'+esc(i.status)+'</span></td><td>'+ops+'</td></tr>';
+  });
+  $id('issTable').innerHTML = h+'</tbody></table>';
+}
+function openIssueForm(docId){
+  var active = DB.docs.filter(function(d){return d.status==='受控有效';});
+  var opts = active.map(function(d){ return '<option value="'+d.id+'" '+(docId===d.id?'selected':'')+'>'+esc(d.code)+'　'+esc(d.name)+'（'+esc(d.latestVersion)+'）</option>'; }).join('');
+  openModal(
+    modalHead('新增文件发放登记')+
+    '<div class="fgrid">'+
+    '<div class="fitem full"><label>选择受控文件 <span class="req">*</span></label><select id="iDoc" onchange="fillIssueDoc()">'+(opts||'<option value="">（无受控有效文件，请先在文件台账新增）</option>')+'</select></div>'+
+    '<div class="fitem"><label>文件编号</label><input id="iCode" disabled></div>'+
+    '<div class="fitem"><label>版本</label><input id="iVer" disabled></div>'+
+    '<div class="fitem full"><label>文件名称</label><input id="iName" disabled></div>'+
+    '<div class="fitem"><label>发放日期 <span class="req">*</span></label><input id="iDate" type="date" value="'+todayStr()+'"></div>'+
+    '<div class="fitem"><label>份数 <span class="req">*</span></label><input id="iCopies" type="number" min="1" value="1"></div>'+
+    '<div class="fitem"><label>接收部门 <span class="req">*</span></label><select id="iDept">'+deptOptions()+'</select></div>'+
+    '<div class="fitem"><label>接收人 <span class="req">*</span></label><input id="iReceiver" placeholder="签收人姓名"></div>'+
+    '<div class="fitem full"><label>备注</label><input id="iRemark"></div>'+
+    '</div><div class="form-tip">发放后状态为"在用"；文件升版或作废时自动回收。操作留痕可查。</div>'+
+    '<div class="mfoot"><button class="btn btn-gray" onclick="closeModal()">取消</button><button class="btn" onclick="saveIssue()">保存登记</button></div>'
+  );
+  if(docId) fillIssueDoc();
+}
+function fillIssueDoc(){
+  var d = DB.docs.find(function(x){return x.id===$id('iDoc').value;});
+  if(!d){ $id('iCode').value=''; $id('iName').value=''; $id('iVer').value=''; return; }
+  $id('iCode').value=d.code; $id('iName').value=d.name; $id('iVer').value=d.latestVersion;
+}
+function saveIssue(){
+  var d = DB.docs.find(function(x){return x.id===$id('iDoc').value;});
+  if(!d){ alert('请选择文件'); return; }
+  var rec = $id('iReceiver').value.trim();
+  if(!rec){ alert('请填写接收人'); return; }
+  var cp = parseInt($id('iCopies').value,10)||1;
+  var it = { id:'I'+(++DB.meta.seq), docId:d.id, code:d.code, name:d.name, version:d.latestVersion,
+    issueDate:$id('iDate').value||todayStr(), dept:$id('iDept').value, receiver:rec, copies:cp,
+    recycleDate:'', recycleOperator:'', status:'在用', remark:$id('iRemark').value.trim(),
+    createdBy:currentUser().username, createdAt:nowStr() };
+  DB.issues.unshift(it);
+  addLog('新增发放', it.code+' v'+it.version, '发放给 '+it.dept+' '+it.receiver+' 共'+it.copies+'份，发放日期 '+it.issueDate);
+  saveDB(); closeModal(); renderIssTable();
+}
+function recycleIssue(id){
+  var i = DB.issues.find(function(x){return x.id===id;});
+  var d = prompt('确认回收吗？（接收部门：'+i.dept+' / '+i.receiver+'）\n请输入回收日期：', todayStr());
+  if(d===null) return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){ alert('日期格式不正确'); return; }
+  i.status='已回收'; i.recycleDate=d; i.recycleOperator=currentUser().name;
+  addLog('文件回收', i.code+' v'+i.version+' → '+i.dept+'/'+i.receiver, '回收 '+i.copies+' 份，回收日期 '+d+'（文件仍在用，可重新发放）');
+  saveDB(); renderIssTable();
+}
+function voidIssue(id){
+  var i = DB.issues.find(function(x){return x.id===id;});
+  var d = prompt('确认将此发放记录标记【作废】吗？（'+i.code+' v'+i.version+' → '+i.dept+'/'+i.receiver+'）\n请输入回收日期：', todayStr());
+  if(d===null) return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(d)){ alert('日期格式不正确'); return; }
+  i.status='已作废'; i.recycleDate=d; i.recycleOperator=currentUser().name;
+  i.remark=(i.remark?i.remark+'；':'')+'单份作废（操作人：'+currentUser().name+'）';
+  addLog('发放作废', i.code+' v'+i.version+' → '+i.dept+'/'+i.receiver, '标记作废，回收日期 '+d);
+  saveDB(); renderIssTable();
+}
+function editIssue(id){
+  var i = DB.issues.find(function(x){return x.id===id;});
+  openModal(
+    modalHead('修改发放记录（版本/状态/回收信息不可修改）')+
+    '<div class="fgrid">'+
+    '<div class="fitem"><label>文件编号</label><input value="'+esc(i.code)+'" disabled></div>'+
+    '<div class="fitem"><label>版本</label><input value="'+esc(i.version)+'" disabled></div>'+
+    '<div class="fitem"><label>发放日期</label><input id="eDate" type="date" value="'+esc(i.issueDate)+'"></div>'+
+    '<div class="fitem"><label>份数</label><input id="eCopies" type="number" min="1" value="'+esc(i.copies)+'"></div>'+
+    '<div class="fitem"><label>接收部门</label><select id="eDept">'+deptOptions(i.dept)+'</select></div>'+
+    '<div class="fitem"><label>接收人</label><input id="eReceiver" value="'+esc(i.receiver)+'"></div>'+
+    '<div class="fitem full"><label>备注</label><input id="eRemark" value="'+esc(i.remark)+'"></div>'+
+    '</div><div class="form-tip">修改前后内容将自动对比并记入操作日志。</div>'+
+    '<div class="mfoot"><button class="btn btn-gray" onclick="closeModal()">取消</button><button class="btn" onclick="saveIssueEdit(\''+i.id+'\')">保存修改</button></div>'
+  );
+}
+function saveIssueEdit(id){
+  var i = DB.issues.find(function(x){return x.id===id;});
+  var nd = $id('eDate').value, nc = parseInt($id('eCopies').value,10)||1, np = $id('eDept').value, nr = $id('eReceiver').value.trim(), nm = $id('eRemark').value.trim();
+  var chg=[];
+  if(i.issueDate!==nd){ chg.push('发放日期 '+i.issueDate+'→'+nd); i.issueDate=nd; }
+  if(i.copies!==nc){ chg.push('份数 '+i.copies+'→'+nc); i.copies=nc; }
+  if(i.dept!==np){ chg.push('部门 '+i.dept+'→'+np); i.dept=np; }
+  if(i.receiver!==nr){ chg.push('接收人 '+i.receiver+'→'+nr); i.receiver=nr; }
+  if(i.remark!==nm){ chg.push('备注更新'); i.remark=nm; }
+  if(chg.length){
+    addLog('修改发放记录', i.code+' v'+i.version+' → '+i.dept+'/'+i.receiver, chg.join('；'));
+    saveDB();
+  }
+  closeModal(); renderIssTable();
+}
+function issueLog(id){
+  var i = DB.issues.find(function(x){return x.id===id;});
+  var ls = DB.logs.filter(function(l){ return l.target && l.target.indexOf(i.code)>-1 && (l.target.indexOf(i.version)>-1 || l.action==='文件升版'); }).slice(0,30);
+  openModal(modalHead('操作留痕（'+esc(i.code+' v'+i.version+' '+i.dept+'/'+i.receiver)+'）')+logTableHTML(ls), true);
+}
+function printIssueList(){
+  var list = issList();
+  var rows = list.map(function(i,idx){
+    return '<tr><td>'+(idx+1)+'</td><td>'+esc(i.code)+'</td><td style="text-align:left">'+esc(i.name)+'</td><td>'+esc(i.version)+'</td><td>'+esc(i.issueDate)+'</td><td>'+esc(i.dept)+'</td><td>'+esc(i.receiver)+'</td><td>'+esc(i.copies)+'</td><td>'+esc(i.recycleDate||'—')+'</td><td>'+esc(i.status)+'</td></tr>';
+  }).join('');
+  printReport(FORMS.issueReg.title, FORMS.issueReg,
+    '<table class="p-table"><tr><th>序号</th><th>文件编号</th><th>文件名称</th><th>版本</th><th>发放日期</th><th>接收部门</th><th>接收人</th><th>份数</th><th>回收日期</th><th>作废状态</th></tr>'+rows+'</table>');
+}
+function exportIssuesCSV(){
+  exportCSV('文件发放回收登记表', ['序号','文件编号','文件名称','版本','发放日期','接收部门','接收人','份数','回收日期','作废状态','备注'],
+    issList().map(function(i,idx){ return [idx+1,i.code,i.name,i.version,i.issueDate,i.dept,i.receiver,i.copies,i.recycleDate,i.status,i.remark]; }));
+}
+
+/* ==================== 文件查询 ==================== */
+function renderQuery(){
+  $id('page').innerHTML =
+  '<div class="card"><h3>综合查询</h3>'+
+  '<div class="toolbar" style="margin-bottom:0">'+
+    '<input id="qKw" placeholder="关键字：编号/名称/接收人/物料" style="width:240px" onkeydown="if(event.key===\'Enter\')doQuery()">'+
+    '<select id="qType"><option value="all">全部（文件+发放记录）</option><option value="doc">仅文件台账</option><option value="issue">仅发放回收记录</option></select>'+
+    '<button class="btn" onclick="doQuery()">查询</button>'+
+    '<span style="font-size:12px;color:#999">支持模糊查询；结果可直接打印。</span>'+
+  '</div></div>'+
+  '<div id="qResult"></div>';
+}
+function doQuery(){
+  var kw = $id('qKw').value.trim().toLowerCase();
+  var tp = $id('qType').value;
+  if(!kw){ alert('请输入关键字'); return; }
+  var html = '';
+  function sect(t, table){
+    html += '<div class="card"><h3>'+t+'</h3>'+table+'</div>';
+  }
+  if((tp==='all'||tp==='doc')){
+    var ds = DB.docs.filter(function(d){ return (d.code+d.name+d.category+d.latestVersion).toLowerCase().indexOf(kw)>-1; });
+    var r = ds.map(function(d,i){ return '<tr><td>'+(i+1)+'</td><td>'+esc(d.code)+'</td><td style="text-align:left">'+esc(d.name)+'</td><td>'+esc(d.category)+'</td><td>'+esc(d.latestVersion)+'</td><td>'+esc(d.status)+'</td><td>'+esc(d.createdAt)+'</td><td><button class="link-btn" onclick="openDocDetail(\''+d.id+'\')">详情</button></td></tr>'; }).join('');
+    sect('文件台账（'+ds.length+'条）','<table><tr><th>序号</th><th>编号</th><th>名称</th><th>类别</th><th>版本</th><th>状态</th><th>建立日期</th><th>操作</th></tr>'+(r||'<tr><td colspan="8">无</td></tr>')+'</table>');
+  }
+  if(tp==='all'||tp==='issue'){
+    var is = DB.issues.filter(function(i){ return (i.code+i.name+i.receiver+i.dept+i.status).toLowerCase().indexOf(kw)>-1; });
+    var r2 = is.map(function(i,idx){ return '<tr><td>'+(idx+1)+'</td><td>'+esc(i.code)+'</td><td style="text-align:left">'+esc(i.name)+'</td><td>'+esc(i.version)+'</td><td>'+esc(i.issueDate)+'</td><td>'+esc(i.dept)+'</td><td>'+esc(i.receiver)+'</td><td>'+esc(i.recycleDate||'—')+'</td><td>'+esc(i.status)+'</td></tr>'; }).join('');
+    sect('发放回收记录（'+is.length+'条）','<table><tr><th>序号</th><th>编号</th><th>名称</th><th>版本</th><th>发放日期</th><th>部门</th><th>接收人</th><th>回收日期</th><th>状态</th></tr>'+(r2||'<tr><td colspan="9">无</td></tr>')+'</table>');
+  }
+  $id('qResult').innerHTML = html;
+  addLog('文件查询','综合查询','关键字：'+kw);
+  saveDB();
+}
+
+/* ==================== 领料申请 ==================== */
+var pickItems = [];
+function renderPicks(){
+  $id('page').innerHTML =
+  '<div class="note">流程：领料申请（生产部门）→ 审批（管理员/文控）→ 确认发料（仓库）。申请单提交后不可修改删除，全过程留痕。</div>'+
+  '<div class="toolbar"><div class="sp"></div>'+
+    '<button class="btn" onclick="openPickForm()">+ 领料申请</button>'+
+    '<button class="btn btn-white" onclick="printPickList()">打印申请汇总表</button>'+
+    '<button class="btn btn-white" onclick="exportPicksCSV()">导出Excel</button>'+
+  '</div><div id="pickTable"></div>';
+  renderPickTable();
+}
+function renderPickTable(){
+  var h = '<table><thead><tr><th style="width:46px">序号</th><th style="width:110px">单号</th><th style="width:95px">申请日期</th><th style="width:90px">申请部门</th><th style="width:80px">领料人</th><th>物料明细</th><th>用途</th><th style="width:80px">状态</th><th style="width:175px">操作</th></tr></thead><tbody>';
+  var list = DB.picks;
+  if(!list.length) h+='<tr><td colspan="9" style="color:#999;padding:16px">暂无申请</td></tr>';
+  list.forEach(function(p,i){
+    var items = p.items.map(function(it){ return esc(it.mName)+'（'+esc(it.spec)+'）× '+esc(it.qty)+esc(it.unit); }).join('；');
+    var cls = p.status==='待审批'?'b-orange':(p.status==='待发料'?'b-blue':(p.status==='已发料'?'b-green':'b-red'));
+    var u = currentUser();
+    var ops='';
+    if(p.status==='待审批' && (u.role==='admin'||u.role==='wenkong')){
+      ops='<button class="link-btn" onclick="approvePick(\''+p.id+'\')">审批同意</button><button class="link-btn red" onclick="rejectPick(\''+p.id+'\')">驳回</button>';
+    }else if(p.status==='待发料' && (u.role==='admin'||u.role==='cangku')){
+      ops='<button class="link-btn" onclick="deliverPick(\''+p.id+'\')">确认发料</button>';
+    }
+    ops+='<button class="link-btn gray" onclick="printPick(\''+p.id+'\')">打印领料单</button>';
+    h+='<tr><td>'+(i+1)+'</td><td>'+esc(p.id)+'</td><td>'+esc(p.date)+'</td><td>'+esc(p.dept)+'</td><td>'+esc(p.picker)+'</td><td style="text-align:left">'+items+'</td><td style="text-align:left">'+esc(p.purpose)+'</td><td><span class="badge '+cls+'">'+esc(p.status)+'</span></td><td>'+ops+'</td></tr>';
+  });
+  $id('pickTable').innerHTML=h+'</tbody></table>';
+}
+function openPickForm(){
+  var codes=[]; DB.stocks.forEach(function(s){ if(codes.indexOf(s.mCode)<0) codes.push(s.mCode); });
+  var dl='<datalist id="mCodes2">'+codes.map(function(c){return '<option value="'+esc(c)+'">';}).join('')+'</datalist>';
+  pickItems=[{mCode:'',mName:'',spec:'',unit:'kg',qty:''}];
+  openModal(
+    modalHead('领料申请')+dl+
+    '<div class="fgrid">'+
+    '<div class="fitem"><label>申请日期</label><input id="pDate" type="date" value="'+todayStr()+'"></div>'+
+    '<div class="fitem"><label>申请部门 <span class="req">*</span></label><select id="pDept">'+deptOptions('生产部')+'</select></div>'+
+    '<div class="fitem"><label>领料人 <span class="req">*</span></label><input id="pPicker"></div>'+
+    '<div class="fitem"><label>用途 <span class="req">*</span></label><input id="pPurpose" placeholder="生产订单/用途"></div>'+
+    '</div>'+
+    '<div style="margin:14px 0 6px;font-weight:600;color:#123c6b">物料明细</div>'+
+    '<table id="pickItemTable" style="margin-bottom:4px"></table>'+
+    '<button class="btn btn-white btn-sm" onclick="addItemRow()">+ 添加一行</button>'+
+    '<div class="mfoot"><button class="btn btn-gray" onclick="closeModal()">取消</button><button class="btn" onclick="savePick()">提交申请</button></div>', true
+  );
+  drawItemRows();
+}
+function drawItemRows(){
+  var h='<thead><tr><th style="width:110px">物料编号</th><th>物料名称</th><th style="width:110px">规格</th><th style="width:70px">单位</th><th style="width:90px">数量</th><th style="width:60px">操作</th></tr></thead><tbody>';
+  pickItems.forEach(function(it,i){
+    h+='<tr><td><input style="width:100%" list="mCodes2" value="'+esc(it.mCode)+'" oninput="pickItems['+i+'].mCode=this.value;fillPickItem('+i+')"></td>'+
+    '<td><input style="width:100%" value="'+esc(it.mName)+'" oninput="pickItems['+i+'].mName=this.value"></td>'+
+    '<td><input style="width:100%" value="'+esc(it.spec)+'" oninput="pickItems['+i+'].spec=this.value"></td>'+
+    '<td><input style="width:100%" value="'+esc(it.unit)+'" oninput="pickItems['+i+'].unit=this.value"></td>'+
+    '<td><input style="width:100%" type="number" min="0" step="0.01" value="'+esc(it.qty)+'" oninput="pickItems['+i+'].qty=this.value"></td>'+
+    '<td>'+(pickItems.length>1?'<button class="link-btn red" onclick="pickItems.splice('+i+',1);drawItemRows()">删行</button>':'')+'</td></tr>';
+  });
+  $id('pickItemTable').innerHTML=h+'</tbody>';
+}
+function addItemRow(){ pickItems.push({mCode:'',mName:'',spec:'',unit:'',qty:''}); drawItemRows(); }
+function fillPickItem(i){
+  var m = DB.stocks.find(function(s){return s.mCode===pickItems[i].mCode;});
+  if(m){ pickItems[i].mName=m.mName; pickItems[i].spec=m.spec; pickItems[i].unit=m.unit; drawItemRows(); }
+}
+function savePick(){
+  var picker=$id('pPicker').value.trim(), purpose=$id('pPurpose').value.trim();
+  if(!picker||!purpose){ alert('请填写领料人和用途'); return; }
+  var okItems = pickItems.filter(function(it){ return it.mCode.trim() && it.mName.trim() && Number(it.qty)>0; });
+  if(!okItems.length){ alert('请至少填写一行完整物料（编号/名称/数量大于0）'); return; }
+  var p = { id:'P'+(++DB.meta.seq), date:$id('pDate').value||todayStr(), dept:$id('pDept').value, picker:picker,
+    items:okItems.map(function(it){ return {mCode:it.mCode.trim(),mName:it.mName.trim(),spec:it.spec.trim(),unit:it.unit.trim(),qty:Number(it.qty)}; }),
+    purpose:purpose, status:'待审批', applyTime:nowStr(), createdBy:currentUser().username, approveBy:'', approveTime:'', deliverTime:'', rejectReason:'' };
+  DB.picks.unshift(p);
+  addLog('领料申请', p.id, p.dept+' '+p.picker+' 申请领料 '+okItems.length+' 项物料，用途：'+purpose);
+  saveDB(); closeModal(); renderPickTable();
+}
+function approvePick(id){
+  var p = DB.picks.find(function(x){return x.id===id;});
+  if(!confirm('审批同意领料单 '+p.id+'？')) return;
+  p.status='待发料'; p.approveBy=currentUser().name; p.approveTime=nowStr();
+  addLog('领料审批', p.id, '审批同意，进入待发料（审批人：'+currentUser().name+'）');
+  saveDB(); renderPickTable();
+}
+function rejectPick(id){
+  var p = DB.picks.find(function(x){return x.id===id;});
+  var r = prompt('请输入驳回原因：');
+  if(r===null) return;
+  p.status='已驳回'; p.rejectReason=r; p.approveBy=currentUser().name; p.approveTime=nowStr();
+  addLog('领料驳回', p.id, '驳回原因：'+r);
+  saveDB(); renderPickTable();
+}
+function deliverPick(id){
+  var p = DB.picks.find(function(x){return x.id===id;});
+  if(!confirm('确认该领料单已发料？')) return;
+  p.status='已发料'; p.deliverTime=nowStr();
+  addLog('领料发料', p.id, '发料完成，共 '+p.items.length+' 项物料（发料人：'+currentUser().name+'）');
+  saveDB(); renderPickTable();
+}
+function printPick(id){
+  var p = DB.picks.find(function(x){return x.id===id;});
+  printReport(FORMS.pickForm.title, FORMS.pickForm,
+    '<table class="p-table" style="margin-bottom:6px"><tr><th style="width:80px">单号</th><td>'+esc(p.id)+'</td><th style="width:80px">申请日期</th><td>'+esc(p.date)+'</td><th style="width:80px">申请部门</th><td>'+esc(p.dept)+'</td><th style="width:70px">领料人</th><td>'+esc(p.picker)+'</td></tr></table>'+
+    '<table class="p-table"><tr><th>序号</th><th>物料编号</th><th>物料名称</th><th>规格型号</th><th>单位</th><th>申请数量</th><th>实发数量</th></tr>'+p.items.map(function(it,i){
+      return '<tr><td>'+(i+1)+'</td><td>'+esc(it.mCode)+'</td><td style="text-align:left">'+esc(it.mName)+'</td><td>'+esc(it.spec)+'</td><td>'+esc(it.unit)+'</td><td>'+esc(it.qty)+'</td><td></td></tr>';
+    }).join('')+'</table>'+
+    '<div style="margin-top:6px;font-size:13px">用途：'+esc(p.purpose)+'　　状态：'+esc(p.status)+(p.rejectReason?'（驳回原因：'+esc(p.rejectReason)+'）':'')+'</div>'+
+    '<div style="display:flex;gap:40px;margin-top:18px;font-size:13px"><span>申请人：'+esc(p.picker)+'</span><span>审批：__________</span><span>仓库发料：__________</span></div>');
+}
+function printPickList(){
+  var rows = DB.picks.map(function(p,i){
+    var items = p.items.map(function(it){ return esc(it.mName)+'×'+esc(it.qty)+esc(it.unit); }).join('；');
+    return '<tr><td>'+(i+1)+'</td><td>'+esc(p.id)+'</td><td>'+esc(p.date)+'</td><td>'+esc(p.dept)+'</td><td>'+esc(p.picker)+'</td><td style="text-align:left">'+items+'</td><td style="text-align:left">'+esc(p.purpose)+'</td><td>'+esc(p.status)+'</td></tr>';
+  }).join('');
+  printReport(FORMS.pickList.title, FORMS.pickList,
+    '<table class="p-table"><tr><th>序号</th><th>单号</th><th>日期</th><th>部门</th><th>领料人</th><th>物料</th><th>用途</th><th>状态</th></tr>'+rows+'</table>');
+}
+function exportPicksCSV(){
+  exportCSV('领料申请汇总', ['单号','日期','部门','领料人','物料','用途','状态','审批人','发料时间'],
+    DB.picks.map(function(p){
+      var items = p.items.map(function(it){ return it.mName+'('+it.spec+')×'+it.qty+it.unit; }).join('；');
+      return [p.id,p.date,p.dept,p.picker,items,p.purpose,p.status,p.approveBy,p.deliverTime];
+    }));
+}
+
+/* ==================== 操作日志 ==================== */
+var logFilter = { kw:'', d1:'', d2:'' };
+function renderLogs(){
+  $id('page').innerHTML =
+  '<div class="note">操作日志为<b>只读追加式</b>记录：谁、何时、做了什么、改了什么，全部自动留痕，无法编辑或删除。验厂时可直接打印作为证据。</div>'+
+  '<div class="toolbar">'+
+    '<input placeholder="搜索操作人/操作/对象/详情" style="width:220px" value="'+esc(logFilter.kw)+'" oninput="logFilter.kw=this.value;renderLogTable()">'+
+    '<input type="date" style="width:140px" value="'+esc(logFilter.d1)+'" onchange="logFilter.d1=this.value;renderLogTable()"><span style="font-size:12px;color:#999">至</span>'+
+    '<input type="date" style="width:140px" value="'+esc(logFilter.d2)+'" onchange="logFilter.d2=this.value;renderLogTable()">'+
+    '<div class="sp"></div>'+
+    '<button class="btn btn-white" onclick="printLogList()">打印日志</button>'+
+    '<button class="btn btn-white" onclick="exportLogsCSV()">导出Excel</button>'+
+  '</div><div id="logTable"></div>';
+  renderLogTable();
+}
+function logList(){
+  return DB.logs.filter(function(l){
+    if(logFilter.d1 && l.time<logFilter.d1) return false;
+    if(logFilter.d2 && l.time>logFilter.d2+' 23:59:59') return false;
+    if(logFilter.kw && (l.time+l.user+l.name+l.action+l.target+l.detail).toLowerCase().indexOf(logFilter.kw.toLowerCase())<0) return false;
+    return true;
+  });
+}
+function renderLogTable(){ $id('logTable').innerHTML = logTableHTML(logList()); }
+function printLogList(){
+  var list = logList();
+  var rows = list.map(function(l,i){
+    return '<tr><td>'+(i+1)+'</td><td>'+esc(l.time)+'</td><td>'+esc(l.name)+'('+esc(l.user)+')</td><td>'+esc(l.action)+'</td><td style="text-align:left">'+esc(l.target)+'</td><td style="text-align:left">'+esc(l.detail)+'</td></tr>';
+  }).join('');
+  printReport(FORMS.logRpt.title, FORMS.logRpt,
+    '<table class="p-table"><tr><th>序号</th><th>时间</th><th>操作人</th><th>操作</th><th>对象</th><th>详情</th></tr>'+rows+'</table>');
+}
+function exportLogsCSV(){
+  exportCSV('系统操作日志', ['序号','时间','操作人账号','操作人','操作','对象','详情'],
+    logList().map(function(l,i){ return [i+1,l.time,l.user,l.name,l.action,l.target,l.detail]; }));
+}
+
+/* ==================== 系统设置 ==================== */
+function renderSettings(){
+  var u = currentUser();
+  if(u.role!=='admin'){ $id('page').innerHTML='<div class="card">无权限</div>'; return; }
+  var uh='<table><thead><tr><th>账号</th><th>姓名</th><th>角色</th><th style="width:140px">操作</th></tr></thead><tbody>';
+  DB.users.forEach(function(x){
+    uh+='<tr><td>'+esc(x.username)+'</td><td>'+esc(x.name)+'</td><td>'+esc(ROLE_NAME[x.role])+'</td><td><button class="link-btn" onclick="resetPwd(\''+x.id+'\')">重置密码</button></td></tr>';
+  });
+  uh+='</tbody></table>';
+  $id('page').innerHTML =
+  '<div class="card"><h3>公司信息</h3><div class="toolbar" style="margin-bottom:0">'+
+    '<span style="font-size:13px">公司名称：</span><input id="setCo" style="width:260px" value="'+esc(DB.settings.company)+'">'+
+    '<button class="btn btn-sm" onclick="saveCompany()">保存</button></div></div>'+
+  '<div class="card"><h3>用户管理（用户不可删除，仅可重置密码）</h3>'+uh+
+    '<div class="toolbar" style="margin-top:12px;margin-bottom:0">'+
+    '<input id="nuUser" placeholder="账号" style="width:120px"><input id="nuName" placeholder="姓名" style="width:120px">'+
+    '<select id="nuRole" style="width:130px"><option value="wenkong">文控中心</option><option value="cangku">仓库</option><option value="prod">生产部</option><option value="admin">管理员</option></select>'+
+    '<input id="nuPass" placeholder="初始密码" style="width:120px" value="123456">'+
+    '<button class="btn btn-sm" onclick="addUser()">+ 添加用户</button></div></div>'+
+  '<div class="card"><h3>数据备份与恢复（重要）</h3>'+
+    '<div class="toolbar" style="margin-bottom:0">'+
+    '<button class="btn btn-green" onclick="exportBackup()">导出全量备份（JSON）</button>'+
+    '<label class="btn btn-white" style="line-height:1.4">导入恢复备份<input type="file" accept=".json" style="display:none" onchange="importBackup(this)"></label>'+
+    '<span style="font-size:12px;color:#999">上次备份：'+esc(DB.meta.lastBackup||'从未备份')+'　数据存于本机浏览器，请定期备份到U盘/网盘；电子文档附件请通过"下载"按钮另行保存原件。</span></div></div>'+
+  '<div class="card"><h3>导出Excel（CSV，可直接用Excel打开）</h3>'+
+    '<div class="toolbar" style="margin-bottom:0">'+
+    '<button class="btn btn-white btn-sm" onclick="exportDocsCSV()">受控文件清单</button>'+
+    '<button class="btn btn-white btn-sm" onclick="exportIssuesCSV()">发放回收登记表</button>'+
+    '<button class="btn btn-white btn-sm" onclick="exportLogsCSV()">操作日志</button>'+
+    '<button class="btn btn-white btn-sm" onclick="exportPicksCSV()">领料汇总</button></div></div>'+
+  '<div class="card"><h3>系统初始化（危险操作）</h3>'+
+    '<div style="font-size:12px;color:#c0392b;line-height:1.8">说明：为满足"记录不可删除"的审核要求，系统正常运行中<b>不提供删除功能</b>。仅在系统正式启用前（或清除测试数据时），管理员可执行一次全量重置（重置后系统为空白状态，所有历史数据及附件清空）。</div>'+
+    '<button class="btn btn-red" style="margin-top:10px" onclick="resetAll()">重置系统（清空全部数据）</button></div>';
+}
+function saveCompany(){
+  var v = $id('setCo').value.trim();
+  if(!v){ alert('公司名称不能为空'); return; }
+  DB.settings.company=v; addLog('系统设置','公司名称','修改公司名称为：'+v);
+  saveDB(); $id('sbCo').textContent=v; alert('已保存');
+}
+function addUser(){
+  var un=$id('nuUser').value.trim(), nm=$id('nuName').value.trim(), rl=$id('nuRole').value, pw=$id('nuPass').value.trim();
+  if(!un||!nm||!pw){ alert('请完整填写账号/姓名/密码'); return; }
+  if(DB.users.some(function(x){return x.username===un;})){ alert('账号已存在'); return; }
+  DB.users.push({ id:'U'+(++DB.meta.seq), username:un, name:nm, role:rl, password:pw });
+  addLog('新增用户','用户管理','新增账号：'+un+'（'+nm+'，'+ROLE_NAME[rl]+'）');
+  saveDB(); renderSettings();
+}
+function resetPwd(id){
+  var x = DB.users.find(function(u){return u.id===id;});
+  var p = prompt('为用户【'+x.name+'】设置新密码：');
+  if(p===null||!p.trim()) return;
+  addLog('重置密码','用户管理','重置账号 '+x.username+' 的登录密码');
+  x.password=p.trim(); saveDB(); alert('已重置');
+}
+function resetAll(){
+  if(!confirm('警告：将清空系统全部数据（文件、发放记录、领料、日志及电子文档附件），仅保留管理员账号。\n确定继续吗？')) return;
+  if(!confirm('再次确认：此操作不可恢复！建议先导出备份。确定清空？')) return;
+  var co = DB.settings.company;
+  DB = emptyDB();
+  DB.settings.company = co;
+  var _ru = currentUser()||{ username:'陈海波', name:'陈海波' };
+  DB.logs.push({ id:'L'+(++DB.meta.seq), time:nowStr(), user:_ru.username, name:_ru.name, action:'系统重置', target:'系统', detail:'执行系统全量重置，历史数据已清空（重置前请已自行备份）' });
+  saveDB();
+  idbClear().catch(function(){});
+  alert('系统已重置为空白状态'); enterApp();
+}
+
+/* ==================== 启动 ==================== */
+enterApp();
+</script>
+</body>
+</html>
