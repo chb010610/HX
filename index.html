@@ -1,0 +1,1171 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宁波泓汛线缆有限公司 - 内部管理系统</title>
+<style>
+/* ================= 全局 ================= */
+:root{
+  --blue:#2563eb; --blue-d:#1d4ed8; --blue-l:#eff6ff; --blue-glow:rgba(37,99,235,.35);
+  --green:#16a34a; --green-l:#f0fdf4; --green-glow:rgba(22,163,74,.28);
+  --orange:#ea580c; --orange-l:#fff7ed; --orange-glow:rgba(234,88,12,.28);
+  --red:#dc2626; --red-l:#fef2f2; --red-glow:rgba(220,38,38,.28);
+  --purple:#7c3aed; --purple-l:#f5f3ff; --purple-glow:rgba(124,58,237,.28);
+  --text:#0f172a; --text2:#475569; --text3:#94a3b8;
+  --border:#e2e8f0; --border2:#cbd5e1;
+  --bg:#f1f5f9; --bg2:#f8fafc;
+  --side:#0b1830; --side2:#111f3d; --side3:#1e3a6f;
+  --radius:14px; --radius-sm:10px;
+  --shadow:0 1px 3px rgba(15,23,42,.07),0 6px 20px rgba(15,23,42,.08);
+  --shadow-lg:0 10px 30px rgba(2,8,23,.12),0 4px 12px rgba(2,8,23,.06);
+  --transition:.2s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,-apple-system,sans-serif;color:var(--text);background:var(--bg);font-size:14px;line-height:1.5}
+a{cursor:pointer;color:inherit}
+h1,h2,h3{font-weight:600;letter-spacing:-.02em}
+
+/* ================= 布局 ================= */
+.app{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+.sidebar{
+  background:linear-gradient(180deg,var(--side) 0%,var(--side2) 100%);
+  color:#e2e8f0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;
+  box-shadow:4px 0 24px rgba(2,8,23,.25);z-index:30;
+}
+.side-brand{display:flex;align-items:center;gap:12px;padding:22px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.side-logo{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;flex-shrink:0;
+  box-shadow:0 6px 18px rgba(37,99,235,.4);
+  object-fit:cover;overflow:hidden;
+}
+.side-title{color:#fff;font-weight:700;font-size:15.5px;letter-spacing:.3px}
+.side-sub{font-size:11px;color:#7d90b5;margin-top:2px}
+.side-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:5px;overflow:auto}
+.nav-item{
+  display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:var(--radius-sm);
+  color:#94a3b8;cursor:pointer;font-size:14px;transition:var(--transition);text-decoration:none;font-weight:500;
+}
+.nav-item svg{width:18px;height:18px;flex-shrink:0;transition:var(--transition)}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item.active{
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#fff;box-shadow:0 8px 20px rgba(37,99,235,.38);
+}
+.nav-item.active svg{color:#fff}
+.side-foot{padding:16px;border-top:1px solid rgba(255,255,255,.08)}
+.lock-tip{display:flex;align-items:center;gap:7px;font-size:11.5px;color:#64748b;margin-bottom:12px}
+.lock-tip svg{color:#16a34a}
+.btn-logout{
+  width:100%;padding:10px;background:rgba(255,255,255,.08);color:#e2e8f0;
+  border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;
+  transition:var(--transition);font-weight:500;
+}
+.btn-logout:hover{background:rgba(220,38,38,.22);border-color:rgba(220,38,38,.45);color:#fecaca}
+
+.main{display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+.topbar{
+  background:#fff;border-bottom:1px solid var(--border);padding:16px 28px;
+  display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20;
+  box-shadow:0 2px 10px rgba(15,23,42,.04);
+}
+.topbar h1{font-size:19px;color:var(--text)}
+.top-sub{font-size:12px;color:var(--text3);margin-top:2px}
+.top-user{display:flex;align-items:center;gap:13px}
+.user-meta{text-align:right}
+.user-name{font-weight:700;font-size:14px;color:var(--text)}
+.user-role{font-size:12px;color:var(--text3);margin-top:1px;display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.role-badge{display:inline-block;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.5px;box-shadow:0 2px 6px rgba(217,119,6,.3)}
+.topbar-tools{display:flex;gap:10px;align-items:center}
+.btn-tool{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px;border-radius:10px;background:#fff;border:1.5px solid var(--border);color:var(--text2);font-weight:600;transition:var(--transition)}
+.btn-tool:hover{border-color:var(--blue);color:var(--blue-d);background:var(--blue-l);transform:translateY(-1px)}
+.btn-tool-primary{background:linear-gradient(135deg,#3b82f6,#2563eb);border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(37,99,235,.25)}
+.btn-tool-primary:hover{filter:brightness(1.06);color:#fff;background:linear-gradient(135deg,#3b82f6,#2563eb);box-shadow:0 8px 20px rgba(37,99,235,.35)}
+.avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,#3b82f6,#7c3aed);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;
+  box-shadow:0 4px 12px rgba(37,99,235,.3);
+}
+.content{padding:26px 30px;flex:1}
+
+/* ================= 工作台 ================= */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;margin-bottom:24px}
+.stat-card{
+  background:#fff;border-radius:var(--radius);padding:22px 20px;position:relative;overflow:hidden;
+  box-shadow:var(--shadow);border:1px solid var(--border);transition:var(--transition);
+}
+.stat-card::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+}
+.stat-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.stat-card.blue::before{background:linear-gradient(180deg,var(--blue),#60a5fa)}
+.stat-card.green::before{background:linear-gradient(180deg,var(--green),#4ade80)}
+.stat-card.orange::before{background:linear-gradient(180deg,var(--orange),#fb923c)}
+.stat-card.red::before{background:linear-gradient(180deg,var(--red),#f87171)}
+.stat-card.purple::before{background:linear-gradient(180deg,var(--purple),#a78bfa)}
+.stat-num{font-size:32px;font-weight:800;margin-bottom:6px;color:var(--text);letter-spacing:-.02em}
+.stat-label{font-size:13px;color:var(--text2);font-weight:500}
+.stat-card::after{
+  content:"";position:absolute;top:14px;right:16px;width:36px;height:36px;border-radius:50%;
+  background:currentColor;opacity:.08;
+}
+
+.panel-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+@media(max-width:1100px){.panel-grid{grid-template-columns:1fr}}
+.mini-logs{list-style:none;max-height:360px;overflow:auto;padding-right:4px}
+.mini-logs li{padding:12px 6px;border-bottom:1px dashed var(--border);font-size:13px;transition:var(--transition)}
+.mini-logs li:last-child{border-bottom:none}
+.mini-logs li:hover{background:var(--bg2);border-radius:8px}
+.mini-logs .l-time{color:var(--text3);font-size:11.5px;margin-bottom:3px}
+.mini-logs .l-user{color:var(--blue-d);font-weight:700}
+.mini-logs .l-act{
+  display:inline-block;background:var(--blue-l);color:var(--blue-d);border-radius:5px;
+  padding:2px 8px;font-size:11.5px;margin:0 5px;font-weight:600;
+}
+
+/* ================= 面板 / 表格 ================= */
+.panel{
+  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:20px;
+  border:1px solid rgba(226,232,240,.6);transition:var(--transition);
+}
+.panel:hover{box-shadow:var(--shadow-lg)}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.panel-head h3{font-size:16px;color:var(--text)}
+.badge-info{font-size:12px;color:var(--text2);background:var(--bg);padding:5px 12px;border-radius:20px;font-weight:500}
+.table-wrap{overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--border)}
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th{
+  background:#f8fafc;color:var(--text2);font-weight:700;text-align:left;padding:12px 14px;
+  border-bottom:2px solid var(--border);white-space:nowrap;font-size:12.5px;letter-spacing:.2px;
+}
+.table td{padding:11px 14px;border-bottom:1px solid #eef2f7;vertical-align:middle;color:var(--text2)}
+.table tbody tr{transition:var(--transition)}
+.table tbody tr:hover{background:#f8fafc}
+.table tbody tr:last-child td{border-bottom:none}
+.table .code{font-family:Consolas,monospace;color:var(--blue-d);font-weight:700}
+.row-obsolete td{color:var(--text3)}
+.row-obsolete .code{text-decoration:line-through;color:var(--text3)}
+.empty-row td{text-align:center;color:var(--text3);padding:32px}
+
+/* 状态徽章 */
+.badge{display:inline-block;padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.b-green{background:var(--green-l);color:var(--green)}
+.b-orange{background:var(--orange-l);color:var(--orange)}
+.b-red{background:var(--red-l);color:var(--red)}
+.b-gray{background:#f1f5f9;color:var(--text2)}
+.b-blue{background:var(--blue-l);color:var(--blue-d)}
+.b-purple{background:var(--purple-l);color:var(--purple)}
+
+/* ================= 工具栏 ================= */
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.filters{display:flex;gap:12px;flex-wrap:wrap}
+.filters input,.filters select{
+  padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:13px;
+  outline:none;background:#fff;transition:var(--transition);min-width:160px;color:var(--text);
+}
+.filters input:focus,.filters select:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(37,99,235,.1)}
+.tool-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
+  padding:10px 18px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:#fff;
+  color:var(--text);font-size:13px;cursor:pointer;transition:var(--transition);font-weight:600;
+}
+.btn:hover{border-color:var(--border2);background:var(--bg2);transform:translateY(-1px)}
+.btn-primary{
+  background:linear-gradient(135deg,#3b82f6,#2563eb);border-color:transparent;color:#fff;
+  box-shadow:0 6px 16px rgba(37,99,235,.25);
+}
+.btn-primary:hover{filter:brightness(1.06);box-shadow:0 8px 20px rgba(37,99,235,.35);transform:translateY(-1px)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
+.btn-xs{padding:3px 8px;font-size:11.5px;border-radius:6px;font-weight:600}
+
+/* 附件单元格 */
+.att-cell{display:flex;align-items:center;flex-wrap:wrap;gap:5px;max-width:280px}
+.att-icon{font-size:14px;opacity:.7}
+.att-name{color:var(--blue-d);font-weight:600;text-decoration:none;cursor:pointer;font-size:12.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.att-name:hover{text-decoration:underline}
+.att-size{color:var(--text3);font-size:11.5px;font-weight:500}
+.btn-danger{background:var(--red-l);border-color:#fecaca;color:var(--red)}
+.btn-danger:hover{background:#fee2e2;border-color:#fca5a5}
+.btn-success{background:var(--green-l);border-color:#bbf7d0;color:var(--green)}
+.btn-success:hover{background:#dcfce7}
+.btn-warn{background:var(--orange-l);border-color:#fed7aa;color:var(--orange)}
+.btn-warn:hover{background:#ffedd5}
+.link{color:var(--blue);font-size:13px;text-decoration:none;font-weight:600}
+.link:hover{text-decoration:underline}
+
+/* ================= 表单 ================= */
+.issue-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:20px}
+@media(max-width:1000px){.issue-grid{grid-template-columns:1fr}}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form .field input,.form .field select{
+  width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  font-size:13.5px;outline:none;background:var(--bg2);transition:var(--transition);color:var(--text);
+}
+.form .field input:focus,.form .field select:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+.form .field label{font-size:12.5px;color:var(--text2);margin-bottom:7px;font-weight:600;display:block}
+.form-actions{display:flex;gap:12px;margin-top:8px}
+.tips-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.tips-list li{
+  background:linear-gradient(135deg,var(--blue-l),#fff);border:1px solid #dbeafe;border-radius:var(--radius-sm);
+  padding:14px 16px;font-size:13px;color:#1e40af;line-height:1.65;transition:var(--transition);
+}
+.tips-list li:hover{transform:translateX(4px);box-shadow:0 4px 12px rgba(37,99,235,.1)}
+.notice{
+  background:linear-gradient(135deg,var(--orange-l),#fff);border:1px solid #fed7aa;border-radius:var(--radius-sm);
+  padding:14px 18px;font-size:13px;color:#9a3412;line-height:1.7;margin-bottom:20px;
+}
+
+/* ================= 弹窗 / 提示 ================= */
+.modal-mask{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px)}
+.modal-mask[hidden]{display:none !important}
+.toast[hidden]{display:none !important}
+.modal{
+  background:#fff;border-radius:var(--radius);padding:28px;width:100%;max-width:580px;
+  box-shadow:0 28px 70px rgba(2,8,23,.35);max-height:90vh;overflow:auto;animation:pop .2s ease;
+  border:1px solid var(--border);
+}
+.modal.wide{max-width:900px}
+.att-manager-table{margin-top:12px}
+.att-manager-table .att-file{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify:flex-start}
+.att-meta{display:block;color:var(--text3);font-size:11.5px;margin-top:3px}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.modal h3{font-size:17px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;color:var(--text)}
+.modal-close{cursor:pointer;color:var(--text3);font-size:24px;line-height:1;border:none;background:none;transition:var(--transition)}
+.modal-close:hover{color:var(--red);transform:rotate(90deg)}
+.modal-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:22px}
+.modal .form-row{margin-bottom:0}
+.toast{position:fixed;top:22px;left:50%;transform:translateX(-50%);color:#fff;padding:12px 24px;border-radius:var(--radius-sm);font-size:14px;z-index:200;box-shadow:0 16px 40px rgba(2,8,23,.35);animation:pop .2s ease;font-weight:500}
+.toast.ok{background:linear-gradient(135deg,#16a34a,#15803d)}
+.toast.err{background:linear-gradient(135deg,#dc2626,#b91c1c)}
+
+/* ================= 打印 ================= */
+#printArea{display:none}
+@media print{
+  body *{visibility:hidden}
+  #printArea{display:block;visibility:visible;position:absolute;left:0;top:0;width:100%}
+  #printArea *{visibility:visible}
+  .print-head{text-align:center;margin-bottom:18px}
+  .print-head h1{font-size:20px;letter-spacing:2px}
+  .print-head .sub{font-size:12px;color:#333;margin-top:4px}
+  .print-meta{font-size:12px;color:#333;margin-bottom:10px;display:flex;justify-content:space-between}
+  .print-table{width:100%;border-collapse:collapse;font-size:11px}
+  .print-table th,.print-table td{border:1px solid #333;padding:5px 6px;text-align:left}
+  .print-table th{background:#eee !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-sign{margin-top:26px;font-size:12px;display:flex;gap:60px}
+}
+
+/* ================= 响应式 ================= */
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:0;top:0;height:100vh;transform:translateX(-100%);transition:transform .3s}
+  .sidebar.open{transform:translateX(0)}
+  .content{padding:20px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="side-brand">
+      <div class="side-logo">
+        <img src="data:image/png;base64,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" alt="" style="width:42px;height:42px;border-radius:12px;object-fit:cover;display:block;">
+      </div>
+      <div>
+        <div class="side-title">泓汛线缆</div>
+        <div class="side-sub" id="sideSysName">内部管理系统</div>
+      </div>
+    </div>
+    <nav class="side-nav">
+      <a class="nav-item active" data-page="dashboard" onclick="gotoPage('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        工作台
+      </a>
+      <a class="nav-item" data-page="ledger" onclick="gotoPage('ledger')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        受控文件台账
+      </a>
+      <a class="nav-item" data-page="issue" onclick="gotoPage('issue')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+        文件发放登记
+      </a>
+      <a class="nav-item" data-page="recall" onclick="gotoPage('recall')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v8h8"/><path d="m12 7 5 5-5 5"/></svg>
+        回收与作废
+      </a>
+      <a class="nav-item" data-page="logs" onclick="gotoPage('logs')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        操作日志（留痕）
+      </a>
+    </nav>
+    <div class="side-foot">
+      <div class="lock-tip">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        记录不可删除 · 全程留痕
+      </div>
+      <button class="btn-logout" onclick="logout()">退出登录</button>
+    </div>
+  </aside>
+
+  <!-- 主区域 -->
+  <main class="main">
+    <!-- 顶部栏 -->
+    <header class="topbar">
+      <div class="page-info">
+        <h1 id="pageTitle">工作台</h1>
+        <p id="pageSub">欢迎回来</p>
+      </div>
+      <div class="top-actions">
+        <button class="btn btn-sm" data-need="admin" onclick="importPackage()">📥 导入数据包</button>
+        <button class="btn btn-sm" data-need="admin" onclick="exportPackage()">📤 导出数据包</button>
+        <div class="user-bar">
+          <div class="avatar" id="avatar"></div>
+          <div>
+            <div class="user-name" id="userName"></div>
+            <div class="user-role" id="userRole"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 内容区 -->
+    <div class="content">
+      <!-- ===== 工作台 ===== -->
+      <section id="page-dashboard" class="page">
+        <div class="stat-grid">
+          <div class="stat-card blue"><div class="stat-num" id="stTotal">0</div><div class="stat-label">台账记录总数</div></div>
+          <div class="stat-card green"><div class="stat-num" id="stInuse">0</div><div class="stat-label">在用文件</div></div>
+          <div class="stat-card orange"><div class="stat-num" id="stRecall">0</div><div class="stat-label">已回收</div></div>
+          <div class="stat-card red"><div class="stat-num" id="stObso">0</div><div class="stat-label">已作废（留档可查）</div></div>
+        </div>
+        <div class="panel-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>最近发放记录</h3>
+              <a onclick="gotoPage('ledger')" class="link">查看台账 →</a>
+            </div>
+            <table class="table">
+              <thead><tr><th>文件编号</th><th>名称</th><th>版本</th><th>发放日期</th><th>接收部门/人</th><th>状态</th></tr></thead>
+              <tbody id="dashDocs"></tbody>
+            </table>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>最近操作日志</h3></div>
+            <ul class="log-list" id="dashLogs"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 受控文件台账 ===== -->
+      <section id="page-ledger" class="page" hidden>
+        <div class="toolbar">
+          <div class="filters">
+            <input id="fKeyword" placeholder="搜索：编号 / 名称 / 接收人" oninput="renderLedger()">
+            <select id="fStatus" onchange="renderLedger()">
+              <option value="">全部状态</option><option>在用</option><option>已回收</option><option>已作废</option>
+            </select>
+            <select id="fDept" onchange="renderLedger()"></select>
+          </div>
+          <div class="tool-btns">
+            <button class="btn" onclick="printLedger()">🖨 打印台账</button>
+            <button class="btn" onclick="exportCSV()">⬇ 导出CSV</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>受控文件发放台账</h3><span class="badge-info">共 <b id="ledgerCount">0</b> 条记录</span></div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>序号</th><th>文件编号</th><th>文件名称</th><th>版本</th><th>发放日期</th><th>接收部门</th><th>接收人</th><th>份数</th><th>回收日期</th><th>状态</th><th>附件</th><th>备注</th><th>操作</th></tr>
+              </thead>
+              <tbody id="ledgerBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="issueReadonlyNotice" hidden style="margin-top:14px;font-size:12px;color:var(--text3)">提示：仅管理员可登记发放、编辑、回收、作废操作。</div>
+      </section>
+
+      <!-- ===== 文件发放登记 ===== -->
+      <section id="page-issue" class="page" hidden>
+        <div class="panel" style="max-width:720px">
+          <div class="panel-head"><h3>登记新发放的受控文件</h3><span class="badge-info">填写后自动生成台账并留痕</span></div>
+          <form id="issueForm" class="form" onsubmit="submitIssue(event)">
+            <div class="form-grid">
+              <div class="field"><label>文件编号 <b>*</b></label><input id="iCode" required placeholder="如：QP-01"></div>
+              <div class="field"><label>版本号 <b>*</b></label><input id="iVer" required placeholder="如：A/1 或 1.0"></div>
+              <div class="field"><label>文件名称 <b>*</b></label><input id="iName" required placeholder="如：质量手册"></div>
+              <div class="field"><label>发放日期 <b>*</b></label><input id="iDate" type="date" required></div>
+              <div class="field"><label>份数 <b>*</b></label><input id="iCopies" type="number" min="1" value="1" required></div>
+              <div class="field"><label>接收部门 <b>*</b></label><select id="iDept" required></select></div>
+              <div class="field"><label>接收人（选填）</label><input id="iPerson" placeholder="不填则仅记录部门"></div>
+              <div class="field" style="grid-column:1/-1"><label>备注</label><input id="iRemark" placeholder="如：换版发放、新增发放等"></div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">✓ 确认发放并留痕</button>
+              <button type="reset" class="btn">重置</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ===== 回收与作废 ===== -->
+      <section id="page-recall" class="page" hidden>
+        <div class="panel">
+          <div class="panel-head"><h3>在用文件（可回收）</h3><span class="badge-info">回收后状态变更为「已回收」</span></div>
+          <table class="table">
+            <thead><tr><th>文件编号</th><th>名称</th><th>版本</th><th>发放日期</th><th>接收部门/人</th><th>操作</th></tr></thead>
+            <tbody id="recallInuseBody"></tbody>
+          </table>
+        </div>
+        <div class="panel" style="margin-top:20px">
+          <div class="panel-head"><h3>已回收文件（可作废 / 恢复）</h3><span class="badge-info">作废后永久留档；恢复可重新使用</span></div>
+          <table class="table">
+            <thead><tr><th>文件编号</th><th>名称</th><th>版本</th><th>回收日期</th><th>接收部门/人</th><th>备注</th><th>操作</th></tr></thead>
+            <tbody id="recallDoneBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== 日志 ===== -->
+      <section id="page-logs" class="page" hidden>
+        <div class="toolbar">
+          <div class="filters">
+            <input id="logKeyword" placeholder="搜索日志内容 / 操作人" oninput="renderLogs()">
+            <select id="logAction" onchange="renderLogs()">
+              <option value="">全部动作</option><option>登录</option><option>登录失败</option><option>文件发放</option><option>文件修改</option><option>文件回收</option><option>文件作废</option>
+            </select>
+          </div>
+          <div class="tool-btns">
+            <button class="btn" onclick="printLogs()">🖨 打印日志</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>系统操作日志</h3><span class="badge-info">只读 · 不可删除 · 自动留痕</span></div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>时间</th><th>操作人</th><th>动作</th><th>内容明细</th></tr></thead>
+              <tbody id="logsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- 打印区域 -->
+<div id="printArea" style="display:none"></div>
+
+<!-- 弹窗遮罩 -->
+<div id="modalMask" class="modal-mask" hidden>
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast" hidden></div>
+
+<script>
+/* ================= 数据层 =================
+ * 宁波泓汛线缆有限公司 内部管理系统
+ * 数据持久化于 localStorage；所有写操作必须调用 addLog 留痕。
+ * 日志和受控文件记录没有删除接口；附件删除仅限管理员并自动留痕 —— 满足验厂要求。
+ * ============================================ */
+
+var DB_KEY='hx_db_v6';
+var LEGACY_DB_KEYS=['hx_db_v5','hx_db_v4','hx_db_v3','hx_db_v2'];
+var GH_OWNER='chb010610';
+var GH_REPO='HX';
+var GH_TOKEN='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';
+var GH_PATH='data.json';
+var GH_SHA='';
+
+function githubPull(){
+  var url='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_PATH;
+  fetch(url,{headers:{'Authorization':'Bearer '+GH_TOKEN,'Accept':'application/vnd.github+json'}})
+    .then(function(r){
+      if(r.status===404){console.log('[同步] 远程无数据，使用本地');return null;}
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return r.json();
+    })
+    .then(function(data){
+      if(!data)return;
+      GH_SHA=data.sha;
+      try{
+        var remote=JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g,'')))));
+        localStorage.setItem(DB_KEY,JSON.stringify(remote));
+        console.log('[同步] 已从 GitHub 拉取最新数据');
+        if(typeof onSyncUpdate==='function')onSyncUpdate();
+      }catch(e){console.error('[同步] 解析失败',e);}
+    })
+    .catch(function(e){console.error('[同步] 拉取失败',e);});
+}
+
+function githubPush(){
+  var raw=localStorage.getItem(DB_KEY);
+  if(!raw)return;
+  try{
+    var content=btoa(unescape(encodeURIComponent(raw)));
+  }catch(e){console.error('[同步] 编码失败',e);return;}
+  var url='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_PATH;
+  var body={message:'数据同步 '+nowStr(),content:content};
+  if(GH_SHA)body.sha=GH_SHA;
+  fetch(url,{
+    method:'PUT',
+    headers:{'Authorization':'Bearer '+GH_TOKEN,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  })
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.content&&data.content.sha)GH_SHA=data.content.sha;
+      console.log('[同步] 已推送到 GitHub');
+    })
+    .catch(function(e){console.error('[同步] 推送失败',e);});
+}
+
+function today(){
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function nowStr(){
+  var d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+}
+function uid(prefix){
+  return prefix+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+}
+
+function seedDB(){
+  return {
+    company:'宁波泓汛线缆有限公司',
+    users:[
+      {username:'陈海波',password:'123456',name:'陈海波',role:'管理员',dept:'信息中心'},
+      {username:'wengkong',password:'123456',name:'王文控',role:'文控员',dept:'品质部'},
+      {username:'cangku',password:'123456',name:'李仓管',role:'仓管员',dept:'仓储部'},
+      {username:'shengchan',password:'123456',name:'张主管',role:'主管',dept:'生产部'}
+    ],
+    depts:['总经理办','品质部','生产部','技术部','仓储部','采购部','销售部','设备部','人事行政部'],
+    // 正式使用前业务数据已清空：受控文件、附件、物料单据和业务日志均从空白开始录入
+    docs:[],
+    materials:[],
+    logs:[]
+  };
+}
+
+function getDB(){
+  var raw=localStorage.getItem(DB_KEY);
+  if(!raw){
+    var db=seedDB();
+    for(var i=0;i<LEGACY_DB_KEYS.length;i++){
+      var legacy=localStorage.getItem(LEGACY_DB_KEYS[i]);
+      if(legacy){
+        try{
+          var oldDB=JSON.parse(legacy);
+          db.company=oldDB.company||db.company;
+          db.depts=oldDB.depts||db.depts;
+          if(oldDB.users&&oldDB.users.length){
+            // 保留旧账号，但以种子数据中的管理员账号为准（避免旧管理员残留导致新账号无法登录）
+            db.users=oldDB.users.filter(function(u){return u.role!=='管理员';});
+            seedDB().users.forEach(function(u){
+              if(u.role==='管理员')db.users.unshift(u);
+            });
+            if(!db.users.length)db.users=seedDB().users;
+          }
+        }catch(e){}
+      }
+      localStorage.removeItem(LEGACY_DB_KEYS[i]);
+    }
+    localStorage.setItem(DB_KEY,JSON.stringify(db));
+    return db;
+  }
+  try{return JSON.parse(raw);}catch(e){
+    var freshDB=seedDB();
+    localStorage.setItem(DB_KEY,JSON.stringify(freshDB));
+    return freshDB;
+  }
+}
+function saveDB(db){
+  localStorage.setItem(DB_KEY,JSON.stringify(db));
+}
+
+/* 操作留痕：所有增/改/审批动作必须调用 */
+function addLog(action,detail){
+  var db=getDB();
+  var s=sessionStorage.getItem('hx_session');
+  var user='未登录用户';
+  if(s){
+    try{
+      var o=JSON.parse(s);
+      user=o.name+'('+ (o.role||'') +')';
+    }catch(e){}
+  }
+  db.logs.unshift({time:nowStr(),user:user,action:action,detail:detail});
+  saveDB(db);
+}
+
+function currentUser(){
+  var s=sessionStorage.getItem('hx_session');
+  if(!s)return null;
+  try{return JSON.parse(s);}catch(e){return null;}
+}
+
+</script>
+<script>
+/* ================= 主逻辑 =================
+ * 所有写操作均调用 addLog() 留痕；受控记录无删除接口，附件删除仅限管理员并留痕。
+ * ============================================ */
+
+var pageTitles={
+  dashboard:['工作台','欢迎回来'],
+  ledger:['受控文件台账','文件编号 / 名称 / 版本 / 发放 / 回收 / 作废状态 · 全程可追溯'],
+  issue:['文件发放登记','登记新发放的受控文件，自动生成台账并留痕'],
+  recall:['回收与作废','旧版本回收登记 → 作废标记，满足验厂追溯要求'],
+  logs:['操作日志（留痕）','只读 · 不可删除 · 记录操作人 / 时间 / 内容']
+};
+
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function toast(msg,type){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast '+(type||'ok');
+  t.hidden=false;
+  clearTimeout(t._h);
+  t._h=setTimeout(function(){t.hidden=true;},2200);
+}
+function statusBadge(s){
+  if(s==='在用')return '<span class="badge b-green">在用</span>';
+  if(s==='已回收')return '<span class="badge b-orange">已回收</span>';
+  if(s==='已作废')return '<span class="badge b-red">已作废</span>';
+  return '<span class="badge b-gray">'+esc(s)+'</span>';
+}
+function blankText(v,placeholder){
+  return v==null||String(v).trim()===''?(placeholder||'—'):String(v).trim();
+}
+function receiverPair(d){
+  var person=(d&&d.recvPerson||'').trim();
+  return (d&&d.recvDept||'')+(person?' / '+person:'');
+}
+function receiverCSV(d){
+  var person=(d&&d.recvPerson||'').trim();
+  return (d&&d.recvDept||'')+(person?'/'+person:'');
+}
+
+/* ---------- 角色 / 工具 ---------- */
+function isAdmin(){
+  var u=currentUser();
+  return !!(u && u.role==='管理员');
+}
+
+/* ---------- GitHub 同步后刷新 ---------- */
+function onSyncUpdate(){
+  var cur=document.querySelector('.nav-item.active');
+  if(cur)gotoPage(cur.dataset.page);
+}
+
+/* ---------- 初始化 ---------- */
+function init(){
+  var user=currentUser();
+  if(!user){location.href='login.html';return;}
+  document.getElementById('userName').textContent=user.name;
+  document.getElementById('userRole').textContent=user.dept+' · '+user.role;
+  var roleEl=document.getElementById('userRole');
+  if(isAdmin()){
+    roleEl.innerHTML=user.dept+' · '+user.role+' <span class="role-badge">管理员</span>';
+  }
+  document.getElementById('avatar').textContent=user.name.charAt(0);
+  var sysName=user.sysType||'生产管理系统';
+  document.getElementById('sideSysName').textContent=sysName;
+  document.title='宁波泓汛线缆有限公司 - '+sysName;
+
+  /* 顶栏同步按钮：仅管理员可看到导出；导入对全员可见，方便其他电脑导入最新数据包 */
+  var syncBtns=document.querySelectorAll('[data-need="admin"]');
+  syncBtns.forEach(function(b){b.style.display=isAdmin()?'':'none';});
+  document.getElementById('issueReadonlyNotice').hidden=isAdmin();
+
+  var db=getDB();
+  var selDept=document.getElementById('fDept');
+  selDept.innerHTML='<option value="">全部部门</option>'+db.depts.map(function(d){return '<option>'+esc(d)+'</option>';}).join('');
+  var iDept=document.getElementById('iDept');
+  iDept.innerHTML=db.depts.map(function(d){return '<option>'+esc(d)+'</option>';}).join('');
+  document.getElementById('iDate').value=today();
+
+  gotoPage('dashboard');
+  githubPull();
+}
+
+function gotoPage(p){
+  document.querySelectorAll('.page').forEach(function(s){s.hidden=true;});
+  document.getElementById('page-'+p).hidden=false;
+  document.querySelectorAll('.nav-item').forEach(function(a){
+    a.classList.toggle('active',a.dataset.page===p);
+  });
+  document.getElementById('pageTitle').textContent=pageTitles[p][0];
+  document.getElementById('pageSub').textContent=pageTitles[p][1];
+  if(p==='dashboard')renderDashboard();
+  if(p==='ledger')renderLedger();
+  if(p==='recall')renderRecall();
+  if(p==='logs')renderLogs();
+}
+
+function logout(){
+  addLog('登出','用户退出系统');
+  sessionStorage.removeItem('hx_session');
+  location.href='login.html';
+}
+
+/* ---------- 工作台 ---------- */
+function renderDashboard(){
+  var db=getDB();
+  var c={ '在用':0,'已回收':0,'已作废':0};
+  db.docs.forEach(function(d){if(c[d.status]!=null)c[d.status]++;});
+  document.getElementById('stTotal').textContent=db.docs.length;
+  document.getElementById('stInuse').textContent=c['在用'];
+  document.getElementById('stRecall').textContent=c['已回收'];
+  document.getElementById('stObso').textContent=c['已作废'];
+
+
+  var recent=db.docs.slice().sort(function(a,b){return (b.issueDate||'').localeCompare(a.issueDate||'');}).slice(0,5);
+  document.getElementById('dashDocs').innerHTML=recent.map(function(d){
+    return '<tr><td class="code">'+esc(d.code)+'</td><td>'+esc(d.name)+'</td><td>'+esc(d.version)+'</td><td>'+esc(d.issueDate)+'</td><td>'+esc(receiverPair(d))+'</td><td>'+statusBadge(d.status)+'</td></tr>';
+  }).join('')||'<tr class="empty-row"><td colspan="6">暂无数据</td></tr>';
+
+  document.getElementById('dashLogs').innerHTML=db.logs.slice(0,8).map(function(l){
+    return '<li><div class="l-time">'+esc(l.time)+'</div><div><span class="l-user">'+esc(l.user)+'</span><span class="l-act">'+esc(l.action)+'</span>'+esc(l.detail)+'</div></li>';
+  }).join('');
+}
+
+/* ---------- 台账 ---------- */
+function renderLedger(){
+  var db=getDB();
+  var kw=(document.getElementById('fKeyword').value||'').trim().toLowerCase();
+  var st=document.getElementById('fStatus').value;
+  var dp=document.getElementById('fDept').value;
+  var list=db.docs.filter(function(d){
+    if(st&&d.status!==st)return false;
+    if(dp&&d.recvDept!==dp)return false;
+    if(kw){
+      var hay=(d.code+' '+d.name+' '+d.version+' '+(d.recvPerson||'')+' '+d.remark).toLowerCase();
+      if(hay.indexOf(kw)<0)return false;
+    }
+    return true;
+  });
+  document.getElementById('ledgerCount').textContent=list.length;
+  document.getElementById('ledgerBody').innerHTML=list.map(function(d,i){
+    var obsolete=d.status==='已作废';
+    var att=d.attachment;
+    var attCell;
+    if(att){
+      var sizeKb=(att.size/1024).toFixed(1);
+      attCell='<div class="att-cell">'
+        +'<span class="att-icon" title="附件">📎</span>'
+        +'<a class="att-name" href="javascript:void(0)" onclick="downloadAttachment(\''+d.id+'\')" title="点击下载：'+esc(att.name)+'">'+esc(att.name)+'</a>'
+        +'<span class="att-size">'+sizeKb+' KB</span>';
+      if(isAdmin()){
+        attCell+=' <button class="btn btn-xs" onclick="uploadAttachment(\''+d.id+'\')">更换</button>'
+                +' <button class="btn btn-xs btn-danger" onclick="removeAttachment(\''+d.id+'\')">删除</button>';
+      }
+      attCell+='</div>';
+    }else{
+      attCell=isAdmin()
+        ?'<button class="btn btn-xs btn-primary" onclick="uploadAttachment(\''+d.id+'\')">＋ 上传附件</button>'
+        :'<span style="color:var(--text3);font-size:12px">无附件</span>';
+    }
+    return '<tr class="'+(obsolete?'row-obsolete':'')+'">'
+      +'<td>'+(i+1)+'</td>'
+      +'<td class="code">'+esc(d.code)+(obsolete?' <span class="badge b-red">作废</span>':'')+'</td>'
+      +'<td>'+esc(d.name)+'</td>'
+      +'<td>'+esc(d.version)+'</td>'
+      +'<td>'+esc(d.issueDate)+'</td>'
+      +'<td>'+esc(d.recvDept)+'</td>'
+      +'<td>'+esc(blankText(d.recvPerson))+'</td>'
+      +'<td>'+esc(d.copies)+'</td>'
+      +'<td>'+(d.recallDate?esc(d.recallDate):'—')+'</td>'
+      +'<td>'+statusBadge(d.status)+'</td>'
+      +'<td>'+attCell+'</td>'
+      +'<td>'+esc(d.remark||'')+'</td>'
+      +'<td>'+(isAdmin()?'<button class="btn btn-sm" onclick="openEditModal(\''+d.id+'\')">修改(留痕)</button>':'<span style="color:var(--text3);font-size:12px">仅查看</span>')+'</td>'
+      +'</tr>';
+  }).join('')||'<tr class="empty-row"><td colspan="13">没有符合条件的记录</td></tr>';
+}
+
+/* ---------- 发放登记 ---------- */
+function submitIssue(e){
+  e.preventDefault();
+  if(!isAdmin()){toast('仅管理员可登记发放受控文件','err');return;}
+  var code=document.getElementById('iCode').value.trim();
+  var ver=document.getElementById('iVer').value.trim();
+  var name=document.getElementById('iName').value.trim();
+  var date=document.getElementById('iDate').value;
+  var copies=parseInt(document.getElementById('iCopies').value,10)||1;
+  var dept=document.getElementById('iDept').value;
+  var person=document.getElementById('iPerson').value.trim();
+  var remark=document.getElementById('iRemark').value.trim();
+  if(!code||!ver||!name||!date||!dept){toast('请填写完整必填项','err');return;}
+  var db=getDB();
+  db.docs.push({id:uid('D'),code:code,name:name,version:ver,issueDate:date,recvDept:dept,recvPerson:person,copies:copies,status:'在用',recallDate:'',remark:remark});
+  saveDB(db);
+  addLog('文件发放','发放【'+code+' '+ver+' '+name+'】'+copies+'份至 '+dept+(person?'/'+person:''));
+  e.target.reset();
+  document.getElementById('iDate').value=today();
+  document.getElementById('iCopies').value=1;
+  toast('发放登记成功，已自动留痕');
+  renderLedger();
+}
+
+/* ---------- 修改（留痕） ---------- */
+function openEditModal(id){
+  if(!isAdmin()){toast('仅管理员可编辑受控文件数据','err');return;}
+  var db=getDB();
+  var d=db.docs.find(function(x){return x.id===id;});
+  if(!d)return;
+  openModal('修改台账记录（系统将自动记录修改人 / 时间 / 内容）',[
+    {key:'code',label:'文件编号',value:d.code},
+    {key:'name',label:'文件名称',value:d.name},
+    {key:'version',label:'版本号',value:d.version},
+    {key:'issueDate',label:'发放日期',type:'date',value:d.issueDate},
+    {key:'copies',label:'份数',type:'number',value:d.copies},
+    {key:'recvDept',label:'接收部门',type:'select',options:db.depts,value:d.recvDept},
+    {key:'recvPerson',label:'接收人（选填）',value:d.recvPerson||''},
+    {key:'remark',label:'备注',value:d.remark||''}
+  ],function(vals){
+    var changes=[];
+    ['code','name','version','issueDate','copies','recvDept','recvPerson','remark'].forEach(function(k){
+      if(String(d[k]||'')!==String(vals[k])){
+        changes.push(k+'：“'+(d[k]||'空')+'”→“'+vals[k]+'”');
+        d[k]=vals[k];
+      }
+    });
+    if(!changes.length){toast('未修改任何内容');return true;}
+    saveDB(db);
+    addLog('文件修改','修改台账记录【'+d.code+' '+d.version+'】：'+changes.join('；'));
+    toast('修改成功，已写入操作日志');
+    renderLedger();
+    return true;
+  });
+}
+
+/* ---------- 回收与作废 ---------- */
+function renderRecall(){
+  var db=getDB();
+  document.getElementById('recallInuseBody').innerHTML=db.docs.filter(function(d){return d.status==='在用';}).map(function(d){
+    var action=isAdmin()
+      ?'<button class="btn btn-sm btn-warn" onclick="doRecall(\''+d.id+'\')">回收登记</button>'
+      :'<span style="color:var(--text3);font-size:12px">仅查看</span>';
+    return '<tr><td class="code">'+esc(d.code)+'</td><td>'+esc(d.name)+'</td><td>'+esc(d.version)+'</td><td>'+esc(d.issueDate)+'</td><td>'+esc(receiverPair(d))+'</td>'
+      +'<td>'+action+'</td></tr>';
+  }).join('')||'<tr class="empty-row"><td colspan="6">没有在用文件</td></tr>';
+
+  document.getElementById('recallDoneBody').innerHTML=db.docs.filter(function(d){return d.status==='已回收';}).map(function(d){
+    var action=isAdmin()
+      ?'<button class="btn btn-sm btn-danger" onclick="doObsolete(\''+d.id+'\')">作废标记</button> '
+        +'<button class="btn btn-sm btn-success" onclick="doRestore(\''+d.id+'\')">恢复在用</button>'
+      :'<span style="color:var(--text3);font-size:12px">仅查看</span>';
+    return '<tr><td class="code">'+esc(d.code)+'</td><td>'+esc(d.name)+'</td><td>'+esc(d.version)+'</td><td>'+esc(d.recallDate)+'</td><td>'+esc(receiverPair(d))+'</td><td>'+esc(d.remark||'')+'</td>'
+      +'<td>'+action+'</td></tr>';
+  }).join('')||'<tr class="empty-row"><td colspan="7">没有已回收文件</td></tr>';
+}
+function doRecall(id){
+  if(!isAdmin()){toast('仅管理员可登记回收','err');return;}
+  var db=getDB();
+  var d=db.docs.find(function(x){return x.id===id;});
+  if(!d)return;
+  openModal('文件回收登记：【'+esc(d.code)+' '+esc(d.version)+'】',[
+    {key:'recallDate',label:'回收日期',type:'date',value:today(),required:true},
+    {key:'remark',label:'回收原因 / 备注',value:d.remark||'换版回收'}
+  ],function(vals){
+    d.status='已回收';
+    d.recallDate=vals.recallDate;
+    d.remark=vals.remark;
+    saveDB(db);
+    addLog('文件回收','回收【'+d.code+' '+d.version+' '+d.name+'】，接收方：'+receiverPair(d)+'，回收日期：'+vals.recallDate);
+    toast('回收登记成功');
+    renderRecall();
+    return true;
+  });
+}
+function doObsolete(id){
+  if(!isAdmin()){toast('仅管理员可标记作废','err');return;}
+  var db=getDB();
+  var d=db.docs.find(function(x){return x.id===id;});
+  if(!d)return;
+  if(!d.recallDate){toast('请先完成回收登记再作废','err');return;}
+  if(!confirm('确认将【'+d.code+' '+d.version+'】标记为作废？\n作废记录将永久保留于台账（不可删除），以满足验厂要求。'))return;
+  d.status='已作废';
+  if(d.remark)d.remark+='；';
+  d.remark=(d.remark||'')+'已作废';
+  saveDB(db);
+  addLog('文件作废','【'+d.code+' '+d.version+' '+d.name+'】回收后标记作废（回收日期：'+d.recallDate+'），记录永久留档');
+  toast('已标记作废，记录永久保留');
+  renderRecall();
+}
+function doRestore(id){
+  if(!isAdmin()){toast('仅管理员可恢复在用状态','err');return;}
+  var db=getDB();
+  var d=db.docs.find(function(x){return x.id===id;});
+  if(!d)return;
+  d.status='在用';
+  saveDB(db);
+  addLog('文件恢复','【'+d.code+' '+d.version+'】由“已回收”恢复为“在用”');
+  toast('已恢复为在用');
+  renderRecall();
+}
+
+/* ---------- 日志 ---------- */
+function renderLogs(){
+  var db=getDB();
+  var kw=(document.getElementById('logKeyword').value||'').trim().toLowerCase();
+  var act=document.getElementById('logAction').value;
+  var list=db.logs.filter(function(l){
+    if(act&&l.action!==act)return false;
+    if(kw){
+      var hay=(l.user+' '+l.action+' '+l.detail).toLowerCase();
+      if(hay.indexOf(kw)<0)return false;
+    }
+    return true;
+  });
+  document.getElementById('logsBody').innerHTML=list.map(function(l){
+    var cls=l.action.indexOf('失败')>=0?'b-red':'b-blue';
+    return '<tr><td style="white-space:nowrap">'+esc(l.time)+'</td><td>'+esc(l.user)+'</td><td><span class="badge '+cls+'">'+esc(l.action)+'</span></td><td>'+esc(l.detail)+'</td></tr>';
+  }).join('')||'<tr class="empty-row"><td colspan="4">没有符合条件的日志</td></tr>';
+}
+
+/* ---------- 通用弹窗 ---------- */
+function openModal(title,fields,onOk){
+  var mask=document.getElementById('modalMask');
+  var box=document.getElementById('modalBox');
+  var html='<h3>'+title+'<button class="modal-close" onclick="closeModal()">×</button></h3><form id="modalForm" class="form">';
+  fields.forEach(function(f,i){
+    html+='<div class="field"><label>'+esc(f.label)+'</label>';
+    if(f.type==='select'){
+      html+='<select data-k="'+f.key+'">'+f.options.map(function(o){return '<option'+(o===f.value?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select>';
+    }else{
+      html+='<input data-k="'+f.key+'" type="'+(f.type||'text')+'" value="'+esc(f.value)+'">';
+    }
+    html+='</div>';
+  });
+  html+='<div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="submit" class="btn btn-primary">确定</button></div></form>';
+  box.className='modal';
+  box.style.width='';
+  box.innerHTML=html;
+  mask.hidden=false;
+  document.getElementById('modalForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var vals={};
+    box.querySelectorAll('[data-k]').forEach(function(el){vals[el.getAttribute('data-k')]=el.value.trim?el.value.trim():el.value;});
+    if(onOk(vals)!==false)closeModal();
+  });
+}
+function closeModal(){
+  var mask=document.getElementById('modalMask');
+  var box=document.getElementById('modalBox');
+  mask.hidden=true;
+  box.className='modal';
+  box.style.width='';
+}
+
+/* ---------- 打印 ---------- */
+function printHead(sub){
+  return '<div class="print-head"><h1>宁波泓汛线缆有限公司</h1><div class="sub">'+sub+'</div></div>'
+    +'<div class="print-meta"><span>打印时间：'+nowStr()+'</span><span>打印人：'+(currentUser()?currentUser().name:'')+'</span></div>';
+}
+function doPrint(html){
+  document.getElementById('printArea').innerHTML=html;
+  window.print();
+}
+function printLedger(){
+  var db=getDB();
+  var rows=db.docs.map(function(d,i){
+    return '<tr><td>'+(i+1)+'</td><td>'+esc(d.code)+(d.status==='已作废'?'（作废）':'')+'</td><td>'+esc(d.name)+'</td><td>'+esc(d.version)+'</td><td>'+esc(d.issueDate)+'</td><td>'+esc(d.recvDept)+'</td><td>'+esc(blankText(d.recvPerson,''))+'</td><td>'+esc(d.copies)+'</td><td>'+(d.recallDate||'—')+'</td><td>'+esc(d.status)+'</td><td>'+esc(d.remark||'')+'</td></tr>';
+  }).join('');
+  doPrint(printHead('受控文件发放台账')+
+    '<table class="print-table"><tr><th>序号</th><th>文件编号</th><th>文件名称</th><th>版本</th><th>发放日期</th><th>接收部门</th><th>接收人</th><th>份数</th><th>回收日期</th><th>状态</th><th>备注</th></tr>'+rows+'</table>'
+    +'<div class="print-sign"><span>文控员：____________</span><span>审核：____________</span><span>日期：____________</span></div>');
+}
+function printLogs(){
+  var db=getDB();
+  var rows=db.logs.map(function(l){
+    return '<tr><td>'+esc(l.time)+'</td><td>'+esc(l.user)+'</td><td>'+esc(l.action)+'</td><td>'+esc(l.detail)+'</td></tr>';
+  }).join('');
+  doPrint(printHead('系统操作日志（审计留痕 · 只读）')+
+    '<table class="print-table"><tr><th>时间</th><th>操作人</th><th>动作</th><th>内容明细</th></tr>'+rows+'</table>');
+}
+
+/* ---------- 导出CSV ---------- */
+function exportCSV(){
+  var db=getDB();
+  var head='文件编号,文件名称,版本,发放日期,接收部门,接收人,份数,回收日期,状态,备注';
+  var rows=db.docs.map(function(d){
+    return [d.code,d.name,d.version,d.issueDate,d.recvDept,d.recvPerson||'',d.copies,d.recallDate||'',d.status,d.remark||''].map(function(x){
+      return '"'+String(x).replace(/"/g,'""')+'"';
+    }).join(',');
+  });
+  var blob=new Blob(['\ufeff'+head+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='受控文件台账_'+today()+'.csv';
+  a.click();
+  addLog('台账导出','导出受控文件台账 CSV（共 '+db.docs.length+' 条）');
+}
+
+/* ---------- 附件管理 ---------- */
+function uploadAttachment(id){
+  if(!isAdmin()){toast('仅管理员可上传/更换附件','err');return;}
+  var db=getDB();
+  var d=db.docs.find(function(x){return x.id===id;});
+  if(!d)return;
+  var mask=document.getElementById('modalMask');
+  var box=document.getElementById('modalBox');
+  box.className='modal';
+  box.style.width='';
+  box.innerHTML='<h3>上传附件：'+esc(d.code)+' '+esc(d.version)+' '+esc(d.name)+'<button class="modal-close" onclick="closeModal()">×</button></h3>'
+    +'<form id="attForm" class="form">'
+    +'<div class="notice" style="margin-bottom:14px"><b>提示：</b>仅管理员可上传/更换附件；其他用户只能下载。建议 ≤ 5 MB（编码后写入本地数据库，浏览器存储上限约 5–10 MB）。</div>'
+    +'<div class="field"><label>选择文件</label><input type="file" id="attFile" required></div>'
+    +'<div class="field"><label>说明（可选，将写入备注）</label><input type="text" id="attRemark" placeholder="如：第三版扫描件"></div>'
+    +'<div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="submit" class="btn btn-primary">上传并留痕</button></div>'
+    +'</form>';
+  mask.hidden=false;
+  document.getElementById('attForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var file=document.getElementById('attFile').files[0];
+    if(!file){toast('请选择文件','err');return;}
+    if(file.size>5*1024*1024){toast('文件超过 5MB，请压缩后再上传','err');return;}
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      var remark=document.getElementById('attRemark').value.trim();
+      var wasReplaced=!!d.attachment;
+      d.attachment={
+        name:file.name,
+        type:file.type||'application/octet-stream',
+        size:file.size,
+        data:ev.target.result,
+        uploadedAt:nowStr(),
+        uploadedBy:currentUser().name
+      };
+      if(remark){
+        d.remark=(d.remark?d.remark+'；':'')+'附件说明：'+remark;
+      }
+      saveDB(db);
+      addLog('附件'+(wasReplaced?'更换':'上传'),'【'+d.code+' '+d.version+' '+d.name+'】'+(wasReplaced?'更换附件':'上传附件')+'：'+file.name+'（'+((file.size/1024).toFixed(1))+' KB）');
+      toast(wasReplaced?'附件已更换（旧附件已替换）':'附件已上传');
+      closeModal();
+      renderLedger();
+    };
+    reader.onerror=function(){toast('文件读取失败','err');};
+    reader.readAsDataURL(file);
+  });
+}
+
+function viewAttachment(id){
+  var db=getDB();
+  var d=db.docs.find(function(x){return x.id===id;});
+  if(!d||!d.attachment){toast('该文件没有附件','err');return;}
+  window.open(d.attachment.data,'_blank');
+  addLog('附件查阅','在线查看附件：'+d.attachment.name+'（'+d.code+' '+d.version+'）');
+}
+
+function downloadAttachment(id){
+  var db=getDB();
+  var d=db.docs.find(function(x){return x.id===id;});
+  if(!d||!d.attachment){toast('该文件没有附件','err');return;}
+  var a=document.createElement('a');
+  a.href=d.attachment.data;
+  a.download=d.attachment.name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  addLog('附件下载','下载附件：'+d.attachment.name+'（'+d.code+' '+d.version+'）');
+  toast('开始下载：'+d.attachment.name);
+}
+
+function removeAttachment(id){
+  if(!isAdmin()){toast('仅管理员可删除附件','err');return;}
+  if(!confirm('确认删除该附件？\n删除后所有用户将无法再下载（操作将留痕）。'))return;
+  var db=getDB();
+  var d=db.docs.find(function(x){return x.id===id;});
+  if(!d||!d.attachment)return;
+  var name=d.attachment.name;
+  d.attachment=null;
+  saveDB(db);
+  addLog('附件删除','删除附件：'+name+'（'+d.code+' '+d.version+'）');
+  toast('附件已删除');
+  renderLedger();
+}
+
+/* ---------- 数据包导出 / 导入（跨电脑同步） ---------- */
+function exportPackage(){
+  if(!isAdmin()){toast('仅管理员可导出数据包','err');return;}
+  var db=getDB();
+  var pkg={
+    _meta:{app:'宁波泓汛线缆有限公司-内部管理系统',version:4,exportedAt:nowStr(),exportedBy:currentUser().name},
+    company:db.company,users:db.users,depts:db.depts,
+    docs:db.docs,materials:db.materials,logs:db.logs
+  };
+  var json=JSON.stringify(pkg);
+  var blob=new Blob([json],{type:'application/json;charset=utf-8'});
+  var sizeMb=(blob.size/1024/1024).toFixed(2);
+  if(blob.size>10*1024*1024){toast('数据包过大（'+sizeMb+' MB），浏览器可能无法下载，请先清理附件','err');return;}
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='HX_数据包_'+today()+'.json';
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);},5000);
+  addLog('数据包导出','导出数据包（含 '+db.docs.length+' 条文件 / '+db.logs.length+' 条日志，大小 '+sizeMb+' MB）');
+  toast('数据包已导出（'+sizeMb+' MB）');
+}
+
+function importPackage(){
+  if(!isAdmin()){toast('仅管理员可导入数据包','err');return;}
+  var mask=document.getElementById('modalMask');
+  var box=document.getElementById('modalBox');
+  box.innerHTML='<h3>导入数据包（覆盖本地数据）<button class="modal-close" onclick="closeModal()">×</button></h3>'
+    +'<form id="impForm" class="form">'
+    +'<div class="notice" style="margin-bottom:14px"><b>说明：</b>选择由管理员导出的 JSON 数据包，导入后会<strong>覆盖当前电脑</strong>的全部数据（含台账、日志和附件），用于让本机看到最新附件。</div>'
+    +'<div class="field"><label>选择数据包文件 (.json)</label><input type="file" id="impFile" accept=".json,application/json" required></div>'
+    +'<div class="field-row" style="margin-top:0"><label class="remember"><input type="checkbox" id="impMerge"> <span>合并模式（保留本机日志，仅覆盖文件）</span></label></div>'
+    +'<div class="modal-actions"><button type="button" class="btn" onclick="closeModal()">取消</button><button type="submit" class="btn btn-primary">导入并覆盖</button></div>'
+    +'</form>';
+  mask.hidden=false;
+  document.getElementById('impForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var file=document.getElementById('impFile').files[0];
+    var merge=document.getElementById('impMerge').checked;
+    if(!file){toast('请选择文件','err');return;}
+    if(!confirm('确认导入数据包？'+(merge?'\n合并模式：保留本机日志，其余覆盖。':'\n覆盖模式：将删除当前电脑全部数据并替换。'))){return;}
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      try{
+        var pkg=JSON.parse(ev.target.result);
+        if(!pkg._meta||pkg._meta.app!=='宁波泓汛线缆有限公司-内部管理系统'){toast('文件格式不正确','err');return;}
+        var local=getDB();
+        var newDB={
+          company:pkg.company||local.company,
+          users:pkg.users||local.users,
+          depts:pkg.depts||local.depts,
+          docs:pkg.docs||[],
+          materials:pkg.materials||[],
+          logs:merge?local.logs:(pkg.logs||[])
+        };
+        saveDB(newDB);
+        addLog('数据包导入','导入数据包（来源：'+pkg._meta.exportedBy+' @ '+pkg._meta.exportedAt+'），共 '+newDB.docs.length+' 条文件'+(merge?'，本机日志保留':'，全部覆盖'));
+        toast('导入成功，请刷新页面查看最新附件');
+        closeModal();
+        setTimeout(function(){location.reload();},800);
+      }catch(err){toast('导入失败：'+err.message,'err');}
+    };
+    reader.readAsText(file);
+  });
+}
+
+init();
+
+</script>
+</body>
+</html>
